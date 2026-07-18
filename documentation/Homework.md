@@ -1,3 +1,8 @@
+## Próxima sesión (2026-07-18 → pendiente)
+- **Día 8 en curso** — quedó en: https://www.hackingwithswift.com/quick-start/understanding-swift/whats-the-difference-between-a-function-and-a-method
+- Temas vistos hoy: computed properties, `didSet`/`willSet` (cheatsheet sección 14)
+- Pendiente del Día 8: `mutating` methods y lo que sigue
+
 Enums vs estructs y casos de uso (repaso rápido, ya cubierto en cheatsheet sección 8)
 
 ## Repasado (sesión 2026-07-15)
