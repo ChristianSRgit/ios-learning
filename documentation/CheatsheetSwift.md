@@ -647,3 +647,34 @@
 | **D** | Dependency Inversion | ¿Dependo de una implementación concreta o de un `protocol`? |
 
 *   **Por qué importa en Swift particularmente**: SOLID nació pensado para clases/herencia (Java/C++), pero en Swift la herramienta principal para aplicarlo son los `protocol` + `protocol extension` (secciones 9 y 10), no la herencia de clases — Swift favorece **composición sobre herencia**.
+
+---
+
+## 👁️ 14. Property Observers (`didSet` / `willSet`)
+
+Código que se ejecuta automáticamente **cuando una propiedad cambia**. Solo funcionan en stored properties (no en computed).
+
+```swift
+struct Progress {
+    var amount: Int {
+        willSet {
+            print("Va a cambiar a \(newValue)")   // newValue = valor entrante
+        }
+        didSet {
+            print("Cambió de \(oldValue) a \(amount)") // oldValue = valor anterior
+        }
+    }
+}
+```
+
+| Observer | Cuándo corre | Variable especial |
+|---|---|---|
+| `willSet` | **Antes** del cambio | `newValue` (el valor que va a entrar) |
+| `didSet` | **Después** del cambio | `oldValue` (el valor que había antes) |
+
+**Cuándo usarlos:**
+- Validar o corregir un valor apenas cambia
+- Actualizar UI cuando cambia un modelo (ej: actualizar un label cuando cambia un puntaje)
+- Logging / debugging de cambios de estado
+
+**Regla práctica:** `didSet` es el más común — reaccionás al nuevo estado. `willSet` solo cuando necesitás hacer algo con el valor *anterior* antes de que se pise.
