@@ -13,15 +13,15 @@ Progreso: marca cada día con `[x]` cuando lo completes. Total: 100 días + epí
 - [x] Day 5 – functions, parameters, and errors
 - [x] Day 6 – closures part one
 - [x] Day 7 – closures part two
-- [ ] Day 8 – structs, properties, and methods
-- [ ] Day 9 – access control, static properties, and laziness
-- [ ] Day 10 – classes and inheritance
-- [ ] Day 11 – protocols, extensions, and protocol extensions
-- [ ] Day 12 – optionals, unwrapping, and typecasting
+- [x] Day 8 – structs, properties, and methods
+- [x] Day 9 – access control, static properties, and laziness
+- [x] Day 10 – classes and inheritance
+- [x] Day 11 – protocols, extensions, and protocol extensions
+- [x] Day 12 – optionals, unwrapping, and typecasting
 
 ## Days 13-15: Consolidation I
 
-- [ ] Day 13 – Swift review, day one
+- [x] Day 13 – Swift review, day one
 - [ ] Day 14 – Swift review, day two
 - [ ] Day 15 – Swift review, day three
 

@@ -170,10 +170,21 @@ while isRunning {
             switch filtroInput {
 
                     case "1": // filtrar por categoria
-                        print("Ingrese la categoría por la que desea filtrar (1: Comida, 2: Transporte, 3: Ocio, 4: Otros):")
-
-                        let inputCategoria = readLine() ?? ""
-                        if let numero = Int(inputCategoria), let categoria = Categoria(rawValue: numero) {
+                        var categoriaFiltro: Categoria? = nil
+                        while categoriaFiltro == nil {
+                            print("Ingrese la categoría por la que desea filtrar (1: Comida, 2: Transporte, 3: Ocio, 4: Otros):")
+                            guard let inputCategoria = readLine() else {
+                                areFiltering = false
+                                isRunning = false
+                                break
+                            }
+                            if let numero = Int(inputCategoria), let categoria = Categoria(rawValue: numero) {
+                                categoriaFiltro = categoria
+                            } else {
+                                print("\(ANSIColor.red.rawValue)\nCategoría inválida. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+                            }
+                        }
+                        if let categoria = categoriaFiltro {
                             let gastosFiltrados = gastos.filter { $0.categoria == categoria }
                             if gastosFiltrados.isEmpty {
                                 print("\nNo hay gastos registrados en la categoría \(categoria).")
@@ -184,8 +195,6 @@ while isRunning {
                                 }
                                 print("\nTotal de gastos en la categoría \(categoria): \(gastosFiltrados.reduce(0) { $0 + $1.monto })")
                             }
-                        } else {
-                            print("\nCategoría inválida. Por favor, intente nuevamente.")
                         }
 
 
@@ -197,8 +206,20 @@ while isRunning {
                                 }
 
                     case "3": // filtrar por descripcion
-                        print("\nIngrese la descripción por la que desea filtrar:")
-                        let inputDescripcion = readLine() ?? ""
+                        var inputDescripcion = ""
+                        while inputDescripcion.isEmpty {
+                            print("\nIngrese la descripción por la que desea filtrar:")
+                            guard let input = readLine() else {
+                                areFiltering = false
+                                isRunning = false
+                                break
+                            }
+                            if input.isEmpty {
+                                print("\(ANSIColor.red.rawValue)\nDescripción vacía. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+                            } else {
+                                inputDescripcion = input
+                            }
+                        }
                         if !inputDescripcion.isEmpty {
                             let gastosFiltrados = gastos.filter { $0.descripcion?.lowercased().contains(inputDescripcion.lowercased()) ?? false }
                             if gastosFiltrados.isEmpty {
@@ -210,8 +231,6 @@ while isRunning {
                                 }
                                 print("\nTotal de gastos con la descripción que contiene '\(inputDescripcion)': \(gastosFiltrados.reduce(0) { $0 + $1.monto })")
                             }
-                        } else {
-                            print("\nDescripción vacía. Por favor, intente nuevamente.")
                         }
 
                     case "4": // total por categoria
@@ -233,19 +252,32 @@ while isRunning {
             }
         }
 //MARK: - editar
-        case "5": 
-            listarComando()
-            print(Mensaje.editarGasto.rawValue)
-
-            let inputNumeroGasto = readLine() ?? ""
-            guard let numeroGasto = Int(inputNumeroGasto), numeroGasto >= 1, numeroGasto <= gastos.count else {
-                print("\(ANSIColor.red.rawValue)\nNúmero de gasto inválido. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+        case "5":
+            guard !gastos.isEmpty else {
+                print("\(ANSIColor.red.rawValue)\nNo hay gastos para editar.\n\(ANSIColor.reset.rawValue)")
                 print(Mensaje.menu.rawValue)
                 break
             }
 
-            let gastoSeleccionado = gastos[numeroGasto - 1].id
-            print(" DEBUG: Gasto seleccionado:\(gastos[numeroGasto - 1])\n")
+            listarComando()
+
+            var numeroGasto: Int? = nil
+            while numeroGasto == nil {
+                print(Mensaje.editarGasto.rawValue)
+                guard let inputNumeroGasto = readLine() else {
+                    isRunning = false
+                    break
+                }
+                if let numero = Int(inputNumeroGasto), numero >= 1, numero <= gastos.count {
+                    numeroGasto = numero
+                } else {
+                    print("\(ANSIColor.red.rawValue)\nNúmero de gasto inválido. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+                }
+            }
+            guard let numeroGastoValido = numeroGasto else { break }
+
+            let gastoSeleccionado = gastos[numeroGastoValido - 1].id
+            print(" DEBUG: Gasto seleccionado:\(gastos[numeroGastoValido - 1])\n")
 
             if let index = gastos.firstIndex(where: { $0.id == gastoSeleccionado }) {
                var editandoGasto = true
@@ -259,22 +291,44 @@ while isRunning {
 
                 switch opcion {
                     case "1": //editar monto
-                        print("Ingrese el nuevo monto:")
-                        if let nuevoMontoInput = Double(readLine() ?? ""), nuevoMontoInput >= 0 {
-                            gastos[index].monto = nuevoMontoInput
+                        var nuevoMonto: Double? = nil
+                        while nuevoMonto == nil {
+                            print("Ingrese el nuevo monto:")
+                            guard let input = readLine() else {
+                                editandoGasto = false
+                                isRunning = false
+                                break
+                            }
+                            if let valor = Double(input), valor >= 0 {
+                                nuevoMonto = valor
+                            } else {
+                                print("\(ANSIColor.red.rawValue)Monto inválido. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+                            }
+                        }
+                        if let valor = nuevoMonto {
+                            gastos[index].monto = valor
                             print("\(ANSIColor.green.rawValue)Monto actualizado exitosamente ✅ .\n\(ANSIColor.reset.rawValue)")
                             editandoGasto = false
-                        } else {
-                            print("\(ANSIColor.red.rawValue)Monto inválido. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
                         }
                     case "2": //editar categoria
-                        print("Ingrese la nueva categoría (1: Comida, 2: Transporte, 3: Ocio, 4: Otros):")
-                        if let nuevaCategoriaInput = Int(readLine() ?? ""), let nuevaCategoria = Categoria(rawValue: nuevaCategoriaInput) {
-                            gastos[index].categoria = nuevaCategoria
+                        var nuevaCategoria: Categoria? = nil
+                        while nuevaCategoria == nil {
+                            print("Ingrese la nueva categoría (1: Comida, 2: Transporte, 3: Ocio, 4: Otros):")
+                            guard let input = readLine() else {
+                                editandoGasto = false
+                                isRunning = false
+                                break
+                            }
+                            if let numero = Int(input), let categoria = Categoria(rawValue: numero) {
+                                nuevaCategoria = categoria
+                            } else {
+                                print("\(ANSIColor.red.rawValue)Categoría inválida. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
+                            }
+                        }
+                        if let categoria = nuevaCategoria {
+                            gastos[index].categoria = categoria
                             print("\(ANSIColor.green.rawValue)Categoría actualizada exitosamente ✅ .\n\(ANSIColor.reset.rawValue)")
                             editandoGasto = false
-                        } else {
-                            print("\(ANSIColor.red.rawValue)Categoría inválida. Por favor, intente nuevamente.\n\(ANSIColor.reset.rawValue)")
                         }
                     case "3": //editar descripcion
                         print("Ingrese la nueva descripción (deje en blanco para eliminar):")

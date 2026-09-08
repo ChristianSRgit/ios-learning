@@ -34,32 +34,53 @@ func totalComando()-> String {
     return "El total de gastos es \(total)"
 }
 
+func agregarComando(gasto:Gasto){
+
+    gastos.append(gasto)
+    gastos.contains(where: { item in item.categoria == gasto.categoria && item.monto == gasto.monto })
+
+
+    print("Gasto agregado exitosamente")
+}
+
+
 
 while let linea = readLine(){
 
+ print("Ingrese un comando (1: Agregar, 2: Listar, 3: Total, 4: Salir):")
+
 let input = linea.split(separator: " ")
 
-switch input[0] {
+guard let comando = input.first else {
+    print("Comando desconocido")
+    continue
+}
 
-case "agregar":
+switch comando {
+// podedmos cambiar directamente por casos numericos en los cuales cada numero representa un comando, por ejemplo 1 para agregar, 2 para listar, 3 para total y 4 para salir. Esto haría que el código sea más fácil de leer y mantener.
+case "1": //agregar
+    print("Ingrese la categoría del gasto (1: Comida, 2: Transporte, 3: Ocio, 4: Otros):")
 
-print("Ingrese la categoría del gasto (Comida, Transporte, Ocio, Otros):")
    // resultado = agregarComando(input)
+    /* switch readLine() { */
 
-case "listar":
+case "2": //listar
 
 print("Listado de gastos:")
-  print("\(listarComando())")
+print("\(listarComando())")
 
-case "total":
+case "3": //total
 
     print("Calculando el total de gastos...")
     print("\(totalComando())")
 
-case "salir":
+case "4": //salir
 
     print("Saliendo de la consola...")
-    break
+    
+case "":
+
+    print("Comando desconocido")
 
 default:
 

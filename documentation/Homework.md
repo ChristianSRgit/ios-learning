@@ -1,26 +1,21 @@
-## Próxima sesión (2026-07-18 → pendiente)
-- **Día 8 en curso** — quedó en: https://www.hackingwithswift.com/quick-start/understanding-swift/whats-the-difference-between-a-function-and-a-method
-- Temas vistos hoy: computed properties, `didSet`/`willSet` (cheatsheet sección 14)
-- Pendiente del Día 8: `mutating` methods y lo que sigue
+Ver `refactor-notes-CRUD-2026-09-06.md` para el análisis del refactor de CRUD.swift (defensa + regresiones encontradas) antes de la sesión.
 
-Enums vs estructs y casos de uso (repaso rápido, ya cubierto en cheatsheet sección 8)
+## Próxima sesión 7-09-2026
 
-## Repasado (sesión 2026-07-15)
-- Principios SOLID (S/O/L/I/D) con ejemplos en dominio SMASH, agregado al cheatsheet (sección 13). Apoyado en protocols/protocol extensions (secciones 9 y 10) — en Swift se prioriza composición sobre herencia.
+•⁠  ⁠Para constantes se puede utilizar un enum en vez de colocar solo constantes como variables.
+•⁠  ⁠⁠Switch que se sale cuando hay un error en modificacion. Revisar ediciones que se va de nuevo al menu anterior (no solo en categoría). 
+•⁠  ⁠Falta ⁠Implementación de contains / filter para filtro x descripción. Usar .map - buscar dife map / compact map
+•⁠  ⁠⁠Agregar metrica consumo total o suma total x categoria o total en todas las categorias sumadas.
+•⁠  ⁠⁠Seguir practicando programación defensiva, siempre pensando que el user te quiere romper el programa.
+•⁠  ⁠⁠Terminar refactor. Enumeración de buenas prácticas que te diga Claude.
+•⁠  ⁠⁠Mantener consistencia de flujo de trabajo, que el user nunca tenga que cerrar y abrir el programa para ir a cierto menu.
 
-## Repasado (sesión 2026-07-16)
-- **Cierra el Día 7 de 100 Days of Swift.** Trailing Closure Syntax: cuando un closure es el **último parámetro** de una función, se saca de los `()` y se escribe pegado con `{ }` después de la llamada. Si es el **único parámetro**, se sacan los `()` enteros. Sumado: **multiple trailing closures** (Swift 5.3+) — el primero sin label, los siguientes con label externo + `:`.
-- Estructura de closures como parámetro: distinguir el closure en sí (ej. `action`, el parámetro de tipo función) de **llamarlo** (`action("London", 60)`, que ejecuta y devuelve un valor) del **resultado** guardado en una constante (ej. `description`, que es un `String` normal, no un closure).
-- **Shorthand Closure Parameter Names** (`$0`, `$1`, ...): si el tipo del closure ya está declarado en la firma de la función, se pueden referenciar los parámetros por posición sin nombrarlos ni tipar. Combinado con single-expression closures, no hace falta `return`. Todo esto en cheatsheet sección 7.
-
-## Repasado (sesión 2026-07-10)
-- Optional vs Force Unwrap profundizado: qué es un Optional ("caja" que puede estar vacía), cuándo `!` es legítimo (solo si el `nil` depende de vos, nunca de datos externos)
-- `if let` vs `guard let`: diferencia de scope (bloque vs resto de la función) e intención (opcional real vs requisito para continuar)
-- Try/catch repasado con sintaxis completa + `try?`/`try!` agregados al cheatsheet (sección 11)
-- Typecasting/casting (`as`, `as?`, `as!`): relación con herencia (superclase/subclase), combinado con `guard let` (cheatsheet sección 12)
-
-## Repasado (sesión 2026-07-09)
-- Extensions y protocol extensions (con protocol extensions, computed properties)
-- Try/catch y manejo de errores (do/try/catch, try?, try!)
-- Force Unwrap vs Optional (regla: sin certeza de que hay valor, nunca usar `!`)
-
+Nuevo ejercicio: 
+•⁠  ⁠Link de api: https://docs.l2api.dev peeeero si encontras alguna mejor o mas fácil
+•⁠  ⁠Creado de proyecto - con su repo en git
+•⁠  ⁠⁠Creado de estructura de proyecto. Separar funcionalidades / responsabilides / modelos.
+•⁠  No olvidar buenas prácticas. Metodologías. KISS. SOLID.
+•⁠  Error handling try and catch
+•⁠  Data types / mapeos de datos de la api / decode / encode / parse json / formateo - URLSession (investigar alamofire)
+•  Mejores practicas que recomiende claudito. Tomarlas con pinzas o evaluarlas y revisar si realmente valen la pena. No es verdad absoluta.
+•  Principalmente listado. Filtrado por categoria. Empezar a investigar caches con los llamados a api
