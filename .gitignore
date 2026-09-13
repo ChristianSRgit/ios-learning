@@ -12,3 +12,4 @@
 
 # WSL/Windows alternate data streams
 *:Zone.Identifier
+codebase/*/
