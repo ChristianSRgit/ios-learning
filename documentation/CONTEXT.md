@@ -4,21 +4,13 @@ Este archivo define las reglas de interacción, flujos de trabajo y directrices 
 
 ---
 
-## 📈 Tracker de Progreso (100 Days of Swift)
-> Este tracker visual se mantendrá actualizado en cada sesión para visualizar el avance general.
+## 📈 Estado actual del aprendizaje
 
-**Progreso del Curso:** `[▓▓▓▓▓▓▓░░░░░░░░░░░░░░] 8%` (Día 8 de 100)
+> Desde septiembre 2026 el eje dejó de ser el recorrido lineal de "100 Days of Swift" — Juan pivotea semana a semana según lo que haga falta. Este archivo describe el modo de trabajo, no un checklist fijo.
 
-*   **Día actual:** Día 8 (structs, properties, and methods) — a arrancar en la próxima sesión
-*   **Módulos completados / en curso:**
-    *   [x] Día 1: variables, simple data types, and string interpolation
-    *   [x] Día 2: arrays, dictionaries, sets, and enums
-    *   [x] Día 3: operators and conditions
-    *   [x] Día 4: loops, loops, and more loops
-    *   [x] Día 5: functions, parameters, and errors
-    *   [x] Día 6: closures part one
-    *   [x] Día 7: closures part two
-    *   [ ] Día 8: structs, properties, and methods
+*   **Track activo:** proyectos prácticos con Juan (ver `dropsim-plan.md` para el más reciente) + repaso de teoría puntual entre sesiones (ver `Homework.md` → "Teoría pendiente" y `ApuntesTeoria.md`).
+*   **100 Days of Swift:** en pausa desde 2026-09-29 (quedó en Día 8 de 100, `100Swift.md` tiene el detalle histórico). Próxima sesión con Juan pasa directo a vistas (UIKit) — no asumir que se retoma el curso día a día salvo que Christian lo indique.
+*   **Antes de cada sesión:** revisar `Homework.md` para saber qué está pendiente — es la fuente de verdad de "qué sigue", no el tracker de días.
 
 ---
 
@@ -52,9 +44,15 @@ Claude debe adaptar su comportamiento de manera ágil durante la sesión de estu
     *   `XX` representa el número de sesión (ej: `01`).
     *   `MMDDYY` representa la fecha en formato Mes-Día-Año (ej: `070226` para el 2 de julio de 2026).
 *   `Homework.md`
-    *   Contiene la lista de temas a repasar y preparar para la siguiente sesión de estudio de 1 hora.
+    *   Contiene la lista de temas a repasar y preparar para la siguiente sesión de estudio de 1 hora. Fuente de verdad de qué está pendiente.
 *   `CheatsheetSwift.md`
     *   Contenedor rápido de analogías conceptuales sintácticas de alto nivel.
+*   `CheatsheetGit.md`
+    *   Cheatsheet de comandos y flujo de git, en el mismo formato que `CheatsheetSwift.md`.
+*   `ApuntesTeoria.md`
+    *   Notas de teoría tomadas al ver los videos recomendados en `Homework.md` (temas conceptuales, no ligados a un proyecto de código puntual).
+*   `<proyecto>-plan.md` (ej: `dropsim-plan.md`)
+    *   Plan de sesión de un proyecto práctico puntual: objetivo, reglas, milestones. Uno por proyecto, se conserva en el repo como referencia aunque el proyecto ya esté cerrado.
 *   `Guia de Estudio.md`
     *   La hoja de ruta general para trabajar en Swift de manera ágil y multiplataforma en entornos Windows/Linux.
 
@@ -63,5 +61,5 @@ Claude debe adaptar su comportamiento de manera ágil durante la sesión de estu
 ## 🚀 Protocolo de Inicio de Sesión
 Al comenzar una nueva sesión de chat o interacción, Claude **siempre** deberá:
 1.  Saludar cálidamente en español.
-2.  Mostrar el **Tracker de Progreso** actual.
-3.  **Preguntar en qué día del curso "100 Days of Swift" te encontrás hoy, qué módulos terminaron de estudiar con tu hermano y si quieren repasar los temas de `Homework.md` o revisar el código de la sesión anterior.**
+2.  Mostrar el **estado actual** (sección de arriba) y los pendientes de `Homework.md`.
+3.  **Preguntar con qué se quiere arrancar: un pendiente puntual de `Homework.md`, un proyecto práctico nuevo, o revisar código/apuntes de la sesión anterior.** No asumir que el hilo es "100 Days of Swift" salvo que Christian lo pida explícitamente.
