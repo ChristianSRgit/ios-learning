@@ -4,10 +4,13 @@
 
 - **dropsim** (cliente API L2, Swift): funcional — 4/4 milestones. PR #4 mergeado a `release/v0.1` (2026-09-27), cumplido antes del deadline del 2026-09-28. Quedan solo mejoras de calidad (ver pendiente abajo).
 - **Git:** branch alignment practicado (PR #3, fast-forward limpio), `CheatsheetGit.md` creado.
-- **CRUD.swift** (gastos-consola): refactor analizado — ver `refactor-notes-CRUD-2026-09-06.md`.
+- **CRUD.swift** (gastos-consola): refactor analizado (notas ya no vigentes, eliminadas 2026-09-29).
 - **Notion sync:** skill armada 2026-09-28 (Homework local como fuente de verdad → Notion, con bump de fecha en Inicio).
 - **100 Days of Swift:** deprioritizado (2026-09-29) — la próxima semana con Juan se pasa a vistas (UIKit) directamente, no es el foco actual.
 - **Limpieza de documentación (2026-09-29):** eliminado `refactor-notes-CRUD-2026-09-06.md` (ya no servía) y un archivo basura `dropsim-plan.md:Zone.Identifier` (metadata de Windows/WSL). `CONTEXT.md` actualizado para reflejar el modo de trabajo actual (Homework.md como fuente de verdad, no el tracker de 100 Days). Notas de teoría de videos ahora van en `ApuntesTeoria.md` (nuevo).
+- **Placeholder de `chance` nulo:** descartado (2026-09-29), no se implementa.
+- **Convención de mensajes de commit:** no hace falta definirla, viene bien así. Nota informal: Juan suele hacer squash merge por PR (un solo commit) — gusto personal suyo, práctica sugerida, no obligatoria.
+- **Teoría — vistas UIKit (ciclo de vida y composición):** explicada 2026-09-29 — ver `ApuntesTeoria.md` para las notas y los videos de referencia.
 
 ## 🔴 Pendiente — dropsim
 
@@ -15,14 +18,12 @@
 - [ ] Convertir comentarios sueltos en funciones propias, aplicando Single Responsibility Principle (SOLID).
 - [ ] Preguntarle a Juan: closures, ¿alternativa a async/await o tema aparte?
 
-Resuelto (2026-09-29): el placeholder de `chance` nulo en un drop **no va** — descartado, no se implementa. Convención de mensajes de commit: no hace falta definirla, viene bien así; nota aparte, Juan comentó que él suele hacer squash merge para dejar un solo commit por PR — gusto personal de Juan, tomarlo como práctica sugerida, no obligatoria.
-
 ## 🟡 Teoría pendiente — repasar
 
 - [ ] Formato de datos y tipos de datos distintos.
 - [ ] Versionado semver de git (major.minor.patch).
 - [ ] Resolución de conflictos de git.
-- [x] Qué es una vista, cómo se compone, y su ciclo de vida (UIKit) — videos recomendados 2026-09-29, ver abajo.
+- [ ] Qué es una vista, cómo se compone, y su ciclo de vida (UIKit) — en curso, ver videos abajo.
 
 ### Videos recomendados — vistas y su ciclo de vida (UIKit)
 
