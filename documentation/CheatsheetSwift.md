@@ -1396,3 +1396,65 @@ Pensá en una clase como una **casa** y la variable como una **dirección escrit
 | Llamar métodos `mutating` | ✅ | ❌ | No aplica | No aplica |
 
 **Regla práctica:** en structs, `let` es un escudo total. En clases, `let` solo ancla el puntero — el objeto en sí sigue siendo mutable.
+
+---
+
+## 🌐 24. Concurrencia y Red (`async`/`await`, `URLSession`, `URLComponents`)
+
+### `async`/`await` — sintaxis mínima
+
+| Pieza | Qué significa |
+|---|---|
+| `func f() async -> T` | `f` puede pausarse a esperar algo (red, disco). |
+| `func f() async throws -> T` | Además puede fallar — casi siempre así en llamadas de red. |
+| `await f()` | Llamar una función `async`. Solo válido **dentro de otra función `async`** (o en el nivel superior de `main.swift`). |
+| `try await f()` | Combo obligatorio cuando `f` es `async throws` a la vez. |
+
+```swift
+func saludar() async -> String { "hola" }
+
+func ejecutar() async {
+    let resultado = await saludar()
+    print(resultado)
+}
+```
+
+### `URLComponents` — armar una URL con query params escapados
+
+```swift
+var componentes = URLComponents(string: "https://api.com/recurso")
+componentes?.queryItems = [URLQueryItem(name: "q", value: "texto con espacios")]
+let url = componentes?.url   // Optional — puede fallar, usar guard let
+```
+
+`URLComponents(string:)` y `.url` son **ambos optionals**. Nunca fuerces con `!` (viola la regla del proyecto de "prohibido force unwrap") — usá `guard let ... else { throw ... }`.
+
+### `URLSession` — la llamada real
+
+```swift
+let (datos, _) = try await URLSession.shared.data(from: url)
+let objeto = try JSONDecoder().decode(MiTipo.self, from: datos)
+```
+
+- `URLSession.shared` — instancia lista para usar, no hace falta crear una.
+- `.data(from:)` es `async throws` → siempre `try await`.
+- Devuelve una **tupla** `(Data, URLResponse)` — el `_` descarta la respuesta HTTP cuando no la necesitás.
+
+### ⚠️ Gotcha de Linux: `FoundationNetworking`
+
+En macOS, `URLSession` vive en `Foundation`. En Linux (tu entorno), vive en un módulo aparte. Sin este bloque, `URLSession.shared` no compila:
+
+```swift
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+```
+
+El `#if canImport(...)` hace que el mismo archivo compile en ambas plataformas sin tocarlo.
+
+### ⚠️ Gotcha de SwiftPM: dónde va el código que se ejecuta
+
+En un proyecto con **varios archivos** (`Models.swift`, `API.swift`, `Simulator.swift`, `main.swift`), **solo `main.swift` puede tener código ejecutable suelto** (líneas que no sean `func`/`struct`/`enum`/`import`). Si escribís `await fetchMonsters(...)` en `API.swift`, el compilador tira *"expressions are not allowed at the top level"* — no es un error de sintaxis de tu función, es que esa línea está en el archivo equivocado. Las llamadas de prueba van en `main.swift`.
+
+**Regla práctica:** cada archivo que no sea `main.swift` solo declara cosas (funciones, tipos). Ejecutar algo (`print`, llamar una función, `await algo()`) va siempre en `main.swift`.

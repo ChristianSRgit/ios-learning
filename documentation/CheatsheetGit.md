@@ -59,6 +59,20 @@ gh pr create --base release/v0.1 --head chore/align-release-v0.1 \
 
 `--base` = a qué branch querés que entren tus cambios. **Default siempre `release/v0.1` en este repo, nunca `main`** (ver sección 0).
 
+**Cómo escribir `--title` y `--body`** (esto es lo que solía dejar en blanco o con un placeholder):
+
+- **`--title`**: una frase corta, en modo imperativo, que dice *qué* cambia — no "cambios varios" ni el nombre de la branch repetido. Ejemplo real (PR #4): `"feat: Milestone 4 - loop de interaccion completo con casos defensivos"`.
+- **`--body`**: acá va el *qué* con más detalle y sobre todo el *por qué* — qué casos cubre, qué bug se encontró y cómo se resolvió. No hace falta prosa larga, pero sí que alguien que no vio el código (Juan, o vos mismo en tres meses) entienda el cambio sin tener que leer el diff entero. Ejemplo real (PR #4):
+  ```
+  Loop completo busqueda -> seleccion de monstruo -> seleccion de item -> simulacion.
+  Casos cubiertos: busqueda vacia, string vacio, monstruo sin tabla de drops,
+  indices fuera de rango, do/catch general (probado con error de red real).
+  Bug resuelto: chance de un drop se recalculaba con random100() dos veces
+  (mostrar vs simular) dando valores distintos - fijado con un array de
+  chances resuelto una sola vez.
+  ```
+  Notá el patrón: primera línea = qué hace el cambio en general, después una lista de casos/bugs concretos. No describas el código línea por línea — para eso está el diff.
+
 ```bash
 gh pr view --web       # abre el PR en el navegador para revisarlo
 gh pr merge --merge     # mergea el PR actual (o pasale el número: gh pr merge 3 --merge)

@@ -32,7 +32,9 @@ Resuelto (2026-09-29): el placeholder de `chance` nulo en un drop **no va** — 
 
 **Qué es una vista y cómo se compone:**
 - [Cómo crear vistas por código con UIKit y AutoLayout (Constraints)](https://www.youtube.com/watch?v=c3PZ-HZKI68) (español)
-- Canal [SwiftBeta](https://www.youtube.com/@swiftbeta) — curso UIKit en español, módulo "Vistas y Controles en UIKit" (buscar en el canal, la web bloqueó el link directo)
+- Playlist SwiftBeta — [Curso UIKit desde cero, en español](https://www.youtube.com/playlist?list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ) (encontrada por Christian 2026-09-29):
+  - [Video #3](https://www.youtube.com/watch?v=SEwJyoQgkmg&list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ&index=3)
+  - [Video #18](https://www.youtube.com/watch?v=y1qkDJFxaLU&list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ&index=18)
 - [Intro to UIKit and UIViews | iOS and Swift](https://www.youtube.com/watch?v=w58ncTHKiK4) (inglés — frame vs bounds, jerarquía de vistas)
 
 ## 🖥️ Mac en la nube — sin resolver

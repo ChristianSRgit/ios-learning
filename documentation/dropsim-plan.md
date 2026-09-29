@@ -133,8 +133,10 @@ Puntos importantes de este endpoint:
 ### Envelope
 
 Todas las respuestas envuelven el contenido en `data`. Nunca leas el objeto raíz
-directo. Esto significa que vas a necesitar un `struct` wrapper, y ahí aparece
-naturalmente el tema de los generics.
+directo. Esto significa que vas a necesitar un `struct` wrapper por endpoint —
+concreto, no genérico, todavía. Con solo dos endpoints y sin haber llamado a
+ninguno, el dolor que justificaría un `APIResponse<T>` no existe aún. Ver
+sección 8: esto quedó resuelto a favor de concreto primero.
 
 ---
 
@@ -241,11 +243,10 @@ Escribir los `struct Codable` que representan las dos respuestas. Probar el
 decoding contra un JSON hardcodeado en un string, sin tocar la red todavía.
 
 ```swift
-// Wrapper generico: toda respuesta de la API viene envuelta en "data".
-// El generico <T> permite reusar este struct para items, monstruos y drops
-// sin escribir un wrapper distinto para cada uno.
-struct APIResponse<T: Decodable>: Decodable {
-    let data: T
+// Wrapper concreto para la respuesta de /monsters. Todavia no es generico:
+// con un solo caso de uso, generalizar seria patron antes del dolor.
+struct MonstruosResponse: Decodable {
+    let data: [Monstruo]
 }
 
 // Un monstruo tal como viene en la lista de /monsters.
@@ -258,6 +259,15 @@ struct Monstruo: Decodable {
     let hp: Double?      // nullable en la API
 }
 ```
+
+Falta modelar el endpoint 2 (`/monsters/{id}/drops`) de la misma forma: un
+wrapper concreto (`DropsResponse`), un struct para el objeto que envuelve el
+array (`npcId`, `npcName`, `drops`), y un struct para cada elemento del array
+`drops`. Mismo patrón que `Monstruo`: mirá el JSON de la sección 3, decidí qué
+campos son opcionales según lo que el schema marca `nullable`, y para `type`
+usá un `enum: String, Decodable` con los tres casos (`spoil`, `adena`,
+`regular`) en vez de un `String` suelto — así el compilador te avisa si el
+día de mañana la API agrega un cuarto valor que tu código no contempla.
 
 Meta del milestone: un `JSONDecoder().decode(...)` que no lanza error sobre un
 string de prueba.
@@ -286,7 +296,7 @@ func buscarMonstruos(nombre: String) async throws -> [Monstruo] {
     }
 
     let (datos, _) = try await URLSession.shared.data(from: url)
-    let respuesta = try JSONDecoder().decode(APIResponse<[Monstruo]>.self, from: datos)
+    let respuesta = try JSONDecoder().decode(MonstruosResponse.self, from: datos)
     return respuesta.data   // devuelve, no imprime
 }
 ```
@@ -369,7 +379,6 @@ Meta del milestone: el flow de la sección 4 corriendo de punta a punta.
 | `Codable` / `Decodable` | mapear JSON a `struct` en el milestone 1 |
 | `JSONDecoder` | el decoding propiamente dicho |
 | `URLComponents` y `URLQueryItem` | armar la URL con query params escapados |
-| Generics básicos | el `APIResponse<T>` que envuelve toda respuesta |
 | `throws` y `try` | propagar errores de red hacia arriba |
 | `enum` de errores | definir tus propios casos de falla |
 
@@ -451,8 +460,12 @@ El punto donde el proyecto empieza a pedir estructura de verdad:
 
 ## 8. Preguntas para revisar con Juan
 
-- ¿El generic `APIResponse<T>` es demasiado pronto, o es el momento justo
-  porque el dolor de escribir tres wrappers idénticos es real y concreto?
+- ~~¿El generic `APIResponse<T>` es demasiado pronto, o es el momento justo
+  porque el dolor de escribir tres wrappers idénticos es real y concreto?~~
+  **Resuelto (2026-09-18):** demasiado pronto. Con dos endpoints y ninguno
+  todavía llamado, el dolor no existe. Milestone 1 usa `MonstruosResponse` y
+  `DropsResponse` concretos; el generic queda para cuando aparezca el tercer
+  endpoint (sección 9, "Valor por hora"), como ya preveía la sección 7.b.
 - ¿Conviene meter `enum ErrorApp: Error` en esta sesión o dejarlo en
   `throws` genérico y agregar el enum como refactor de una segunda pasada?
 - La separación en cuatro archivos: ¿vale la pena en un proyecto de consola,
