@@ -14,9 +14,9 @@
 
 ## 🔴 Pendiente — dropsim
 
-- [ ] Agregar `utils.swift` para funciones auxiliares.
+- [x] Agregar `utils.swift` para funciones auxiliares (2026-09-30, compila y funciona).
 - [ ] Convertir comentarios sueltos en funciones propias, aplicando Single Responsibility Principle (SOLID).
-- [ ] Preguntarle a Juan: closures, ¿alternativa a async/await o tema aparte?
+- [x] Crear `LocalConstants.swift` (enum con `static let baseURL`) y mover ahí las URLs hardcodeadas de `API.swift` (2026-09-30, aplicado — sin `.gitignore`, porque la API es pública y no usa key).
 
 ## 🟡 Teoría pendiente — repasar
 

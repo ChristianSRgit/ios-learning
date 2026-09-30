@@ -1429,6 +1429,19 @@ let url = componentes?.url   // Optional — puede fallar, usar guard let
 
 `URLComponents(string:)` y `.url` son **ambos optionals**. Nunca fuerces con `!` (viola la regla del proyecto de "prohibido force unwrap") — usá `guard let ... else { throw ... }`.
 
+### Enum con raw value para endpoints — evitar strings sueltos
+
+```swift
+enum APIEndpoint: String {
+    case monsters = "/monsters"
+    case drops = "/drops"
+}
+
+let url = "\(LocalConstants.baseURL)\(APIEndpoint.monsters.rawValue)"
+```
+
+Un `enum: String` le pone nombre a cada ruta en vez de repetir el string literal en cada función — el compilador te avisa si escribís mal un caso (no pasa lo mismo con un string suelto), y agregar un endpoint nuevo es un solo `case` más. Combina con `LocalConstants` (base URL) para armar la URL completa sin strings hardcodeados en ningún lado.
+
 ### `URLSession` — la llamada real
 
 ```swift
