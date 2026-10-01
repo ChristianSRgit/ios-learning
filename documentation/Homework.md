@@ -51,6 +51,27 @@ Estado real del repo (2026-10-01): `release/v0.1` (5678a3a, PR #5) todavía **no
 
 Fuente actual: ["Curso UIKit en Swift para Principiantes"](https://www.youtube.com/watch?v=y1qkDJFxaLU&list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ&index=19), video único de ~5.5hs con 20 capítulos internos (no es una serie de videos separados — esto corrige la suposición anterior). Transcript completo procesado 2026-10-01 y filtrado en `ApuntesUIKit-Curso.md` — resumen por bloque temático, checklist de repaso y studyflow sugerido para las próximas sesiones. En curso, se sigue viendo de a poco.
 
-## 🖥️ Mac en la nube — sin resolver
+## 🖥️ Mac en la nube — PRIORIDAD #1, próxima sesión
 
-AWS EC2 Mac mini M1 (`mac2.metal`) investigado 2026-09-28: viable técnicamente, pero cobra por Dedicated Host con mínimo de 24hs por asignación (no importa el uso real dentro de esa ventana). Juan sigue investigando MacinCloud en paralelo. Sin decisión tomada — no prioritario hoy (2026-09-29).
+Christian marcó esto como lo primero a resolver en la próxima sesión, antes que cualquier otra cosa (2026-10-01).
+
+AWS EC2 Mac mini M1 (`mac2.metal`) investigado 2026-09-28: viable técnicamente, pero cobra por Dedicated Host con mínimo de 24hs por asignación (no importa el uso real dentro de esa ventana) — descartado. Juan investigaba MacinCloud en paralelo, sin resultado aún.
+
+Restricciones duras para la decisión final:
+- Costo máximo: USD 40/mes
+- Medio de pago: tarjeta Lemon (prepaga/virtual, cobra en USD)
+- Evidencia requerida: reviews/testimonios de usuarios reales de los últimos 6 meses, no solo marketing del proveedor
+
+Prompt de investigación preparado 2026-10-01 para correr en un chat aparte (celular) antes de la próxima sesión — pegar tal cual:
+
+```
+Necesito contratar un Mac remoto en la nube para desarrollo iOS (compilar y correr apps Swift/UIKit en Xcode). Investigá y comparame opciones reales, con estas restricciones estrictas — descartá cualquier opción que no las cumpla:
+
+1. Costo mensual máximo: USD 40 (todo incluido, sin cargos ocultos de setup, overage o "pay per hour" que puedan superar ese techo si lo uso normal, full-time de desarrollo part-time: ~10-15hs semanales).
+2. Debe poder pagarse con tarjeta Lemon (Argentina) — en la práctica esto significa que tiene que aceptar una tarjeta prepaga/virtual Mastercard o Visa internacional cobrando en USD, sin requerir domicilio de facturación en EEUU ni verificación bancaria local de EEUU. Confirmá explícitamente si el proveedor acepta tarjetas prepagas/virtuales o si rechaza ese tipo de medio de pago (muchos servicios de hosting lo rechazan por antifraude).
+3. Necesito evidencia de que el servicio funciona de verdad: buscá reviews, posts de Reddit, foros de desarrolladores, threads de Twitter/X o videos de YouTube de los ÚLTIMOS 6 MESES (desde abril 2026 en adelante) de usuarios reales que lo hayan usado — no solo lo que dice el marketing del proveedor. Priorizá fuentes donde alguien cuente su experiencia real: tiempos de espera, caídas del servicio, soporte, facilidad para conectar por VNC/Screen Sharing desde una PC con Windows/WSL.
+
+Candidatos a investigar como mínimo: MacinCloud (planes Pay-As-You-Go y Managed), MacStadium, Scaleway Mac mini M1/M2, AWS EC2 Mac instances (ya lo descarté por el mínimo de 24hs de Dedicated Host — no lo evalúes de nuevo salvo que haya cambiado esa política), Xcode Cloud (no es un Mac remoto, es CI — aclarame si no aplica a mi caso), y cualquier otro proveedor legítimo que encuentres.
+
+Entregame una tabla comparativa con: proveedor, plan específico, costo mensual real en USD, si acepta tarjetas prepagas/virtuales (sí/no/no confirmado), y 1-2 líneas de evidencia reciente (con fuente) de que funciona o de problemas reportados. Terminá con una recomendación concreta de cuál contratar y por qué.
+```
