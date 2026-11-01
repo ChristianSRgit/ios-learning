@@ -2,76 +2,57 @@
 
 ## 📚 Mini log de proyectos/temas vistos
 
-- **dropsim** (cliente API L2, Swift): funcional — 4/4 milestones. PR #4 mergeado a `release/v0.1` (2026-09-27), cumplido antes del deadline del 2026-09-28. PR #5 mergeado (2026-09-30): `LocalConstants.swift`/`utils.swift` + limpieza de código muerto. Quedan solo mejoras de calidad — SRP en `main.swift` — deferidas a la próxima sesión por volumen de trabajo (ver pendiente abajo).
+- **dropsim** (cliente API L2, Swift): funcional — 4/4 milestones. PR #4 mergeado a `release/v0.1` (2026-09-27), cumplido antes del deadline del 2026-09-28. PR #5 mergeado (2026-09-30): `LocalConstants.swift`/`utils.swift` + limpieza de código muerto.
+- **dropsim — pendientes migrados a GitHub issues (2026-10-26):** plan de branches ([#7](https://github.com/ChristianSRgit/dropsim/issues/7)), refactor SRP de `main.swift` ([#6](https://github.com/ChristianSRgit/dropsim/issues/6)) e idea de cara visual para portfolio ([#8](https://github.com/ChristianSRgit/dropsim/issues/8)) viven ahora en el repo. Dropsim sale de Homework — queda como proyecto a retomar a futuro, prioridad baja (necesita bastante trabajo y su utilidad como producto es acotada frente a CirujeAR).
+- **VM local (hackingtosh) operativa (validado 2026-10-24):** pipeline de build/run end-to-end por SSH (`/ios-code` + `/ios-build`) probado contra un proyecto real (`prueba`). Reemplaza la necesidad de un Mac en la nube — esa decisión queda cerrada, no se retoma salvo que la VM deje de ser viable.
 - **Git:** branch alignment practicado (PR #3, fast-forward limpio), `CheatsheetGit.md` creado.
 - **CRUD.swift** (gastos-consola): refactor analizado (notas ya no vigentes, eliminadas 2026-09-29).
 - **Notion sync:** skill armada 2026-09-28 (Homework local como fuente de verdad → Notion, con bump de fecha en Inicio).
-- **100 Days of Swift:** deprioritizado (2026-09-29) — la próxima semana con Juan se pasa a vistas (UIKit) directamente, no es el foco actual.
-- **Limpieza de documentación (2026-09-29):** eliminado `refactor-notes-CRUD-2026-09-06.md` (ya no servía) y un archivo basura `dropsim-plan.md:Zone.Identifier` (metadata de Windows/WSL). `CONTEXT.md` actualizado para reflejar el modo de trabajo actual (Homework.md como fuente de verdad, no el tracker de 100 Days). Notas de teoría de videos ahora van en `ApuntesTeoria.md` (nuevo).
-- **Placeholder de `chance` nulo:** descartado (2026-09-29), no se implementa.
-- **Convención de mensajes de commit:** no hace falta definirla, viene bien así. Nota informal: Juan suele hacer squash merge por PR (un solo commit) — gusto personal suyo, práctica sugerida, no obligatoria.
-- **Teoría — vistas UIKit (ciclo de vida y composición):** explicada 2026-09-29 — ver `ApuntesTeoria.md` para las notas y los videos de referencia.
-- **Teoría de la sesión 2026-10-01:** value vs reference types, semver, resolución de conflictos de git (con ejercicio simulado) — todo cerrado, notas en `ApuntesTeoria.md`. Resumen conceptual de AutoLayout/Constraints armado antes de que Christian viera el video correspondiente.
-- **Video de MoureDev (ciclo de vida de vistas):** notas cerradas 2026-10-01 — el diagrama `img/uikit-view-lifecycle.png` ya lo sintetiza, documentado en `ApuntesTeoria.md`.
-- **Fuente de videos UIKit:** se pasa de videos sueltos a una playlist estructurada (ver "Videos — en curso" abajo) — video actual (#19) es largo (~5hs), se digiere en varias sesiones.
+- **100 Days of Swift:** deprioritizado (2026-09-29) — el foco pasó a vistas (UIKit) y ahora a CirujeAR.
+- **Limpieza de documentación (2026-09-29):** eliminado `refactor-notes-CRUD-2026-09-06.md` y un archivo basura `dropsim-plan.md:Zone.Identifier`. `CONTEXT.md` actualizado. Notas de teoría de videos van en `ApuntesTeoria.md`.
+- **Placeholder de `chance` nulo (dropsim):** descartado (2026-09-29), no se implementa.
+- **Convención de mensajes de commit:** no hace falta definirla. Nota informal: Juan suele hacer squash merge por PR — gusto personal suyo, práctica sugerida, no obligatoria.
+- **Teoría — vistas UIKit (ciclo de vida y composición):** explicada 2026-09-29 — ver `ApuntesTeoria.md`.
+- **Teoría de la sesión 2026-10-01:** value vs reference types, semver, resolución de conflictos de git — notas en `ApuntesTeoria.md`.
+- **Fuente de videos UIKit:** playlist estructurada (ver "Videos — en curso" abajo), video actual (#19) es largo (~5hs), se digiere en varias sesiones.
+- **Proyecto "ciruja" renombrado a CirujeAR (2026-10-26):** a diferencia de dropsim, pensado para usuarios reales con mira a lanzamiento en App Store a futuro. Suma referencias de diseño de **pasitoapp** (app validada en el mercado argentino, estilo minimalista) — Christian va a pasar link/capturas.
+- **Notion sync (2026-10-26):** Homework.md local actualizado y propagado a la página Homework de Notion.
+- **Sesión 2026-10-29 (CirujeAR):** quitado el Storyboard default de Xcode — `SceneDelegate` arma la ventana por código, `ViewController` es el punto de entrada real. Notas en `docs/app-lifecycle.md` del repo (no estaban commiteadas, se subieron recién hoy 2026-11-01 junto con el resto).
+- **Sesión 2026-10-31 (CirujeAR):** primera pasada de la pantalla Dashboard — título, secciones "Cirujanos TOP"/"Podrían interesarte" (solo labels), `cardsStack` horizontal con 3 tarjetas placeholder sin scroll todavía. Vocabulario UIKit nuevo de esa sesión en `documentation/screens_cheatsheet.md`.
+- **Sesión 2026-11-01 (CirujeAR):** `UIScrollView` aplicado al `cardsStack` de "Podrían interesarte" (ahora 8 tarjetas, scroll horizontal, indicador oculto) — teoría en `ApuntesTeoria.md` (sección nueva) y resumen de sesión en `screens_cheatsheet.md`. Dos bugs de runtime debugueados en vivo (no los agarra el compilador): vista colgada de un padre desconectado de la jerarquía, y crash de AutoLayout por falta de ancestro común — ver detalle en `ApuntesTeoria.md`. Christian aprendió el flujo de build manual desde Xcode GUI en la VM (elegir dispositivo + ▶️/`Cmd+R`) como plan B sin SSH. Decisión de scope: "Cirujanos TOP" lleva datos hardcodeados por ahora (`topCirujanos: [(name, points)]`, sin modelo real todavía — eso es Fase 2). Referencia de paleta de colores neo-brutalista guardada en `docs/public/paleta-neo-brutalismo.jpg` del repo CirujeAR (todavía no aplicada a las pantallas). Todo sincronizado VM → repo → push con `/ios-sync` al cierre de la sesión.
 
-## 🔵 Plan de branches — cerrar `release/v0.1` y abrir `release/v0.2` (dropsim)
+## 🥇 Prioridad 1 — CirujeAR
 
-Estado real del repo (2026-10-01): `release/v0.1` (5678a3a, PR #5) todavía **no está mergeado a `main`** (main sigue en PR #2, 0947fd0). No hay tag. El refactor SRP pendiente es parte de este mismo ciclo v0.1, no de v0.2.
+Proyecto nuevo (distinto de dropsim) con foco explícito en que **Christian programe las pantallas él mismo** — IA al mínimo, Claude como PM para scope/metas, no como el que escribe el código. Objetivo inmediato: tener pantallas armadas para mostrarle a Juan.
 
-**Fase 1 — terminar pendientes de v0.1 (feature branch → PR a `release/v0.1`):**
-- [ ] Rama `docs/readme-and-structure` (o el nombre que prefieras): actualizar `README.md` + reestructurar carpetas/archivos → commit → push → PR a `release/v0.1` → mergear → borrar rama.
-- [ ] Rama `refactor/main-srp`: aplicar el refactor SRP de `main.swift` (ver checklist abajo) → commit → push → PR a `release/v0.1` → mergear → borrar rama.
+Base técnica ya armada (2026-10-26): repo privado [`ChristianSRgit/CirujeAR`](https://github.com/ChristianSRgit/CirujeAR), proyecto Xcode creado y corriendo en el Simulator de la VM (UIKit por código, sin Storyboard).
 
-**Fase 2 — cerrar v0.1:**
-- [ ] PR `release/v0.1` → `main`.
-- [ ] Mergear (squash o merge commit, a tu gusto).
-- [ ] Tag `v0.1.0` en `main`.
+Plan completo de pantallas y del sistema de puntaje "Cirujano" (avistamientos, donaciones, confirmaciones, badges), relevado sobre referencias de **pasitoapp**: [`docs/FEATURES.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/FEATURES.md) del repo. Dividido en:
+- **Fase 1 (ahora):** las 9 pantallas con modelo simplificado (objeto posteado/levantado, sin distinción avistamiento/donación todavía) — esto es lo que se programa esta etapa.
+- **Fase 2 (después, no bloquea Fase 1):** sistema de puntaje Cirujano completo — dos tipos de posteo (avistamiento/donación) con puntaje distinto, confirmación entre usuarios, badges (Ojo Clínico + 3 propuestos). Queda documentado, no se implementa todavía.
+- **VIP/VIPER y capa de persistencia** (manager/factory/delegate/protocol para cache/UserDefaults/API REST, candidata Supabase): teoría/arquitectura en paralelo, tampoco bloquea las pantallas.
 
-**Fase 3 — abrir v0.2:**
-- [ ] Crear `release/v0.2` desde `main` (ya con `v0.1.0` tageado) → push a origin.
-- [ ] A partir de ahí, cada feature nueva entra como `feature/...` → PR a `release/v0.2`.
+Puntaje y badges ya cerrados (2026-10-26): avistamiento = 1 punto, donación = 2 puntos. Badges son progresión de avistamientos: Siempre Alerta (10), Sentido Arácnido (25), Ojo de Águila (50) — se descartó "Ojo Clínico".
 
-## 🔴 Pendiente — dropsim
+**Próximo paso (arranca la próxima sesión, antes del repaso con Juan):** armar una fila de UI por cada cirujano de `topCirujanos` (nombre + puntos) y agregarlas al stack de la sección "Cirujanos TOP" — mismo patrón de stacks anidados que `cardsStack`.
 
-- [ ] Convertir comentarios sueltos en funciones propias, aplicando Single Responsibility Principle (SOLID). Relevados en `main.swift` (2026-09-30) — va en la rama `refactor/main-srp` del plan de branches arriba:
-  - [ ] L45-50: leer input del usuario → `func leerEntrada() -> String?`.
-  - [ ] L64-67: imprimir lista de monstruos → `func imprimirMonstruos(_ monstruos: [Monster])`.
-  - [ ] L69-87: pedir y resolver selección de monstruo (input, caso 0, validación de rango) → `func seleccionarMonstruo(cantidad: Int) -> Int?`.
-  - [ ] L83/L112-115: validación de rango duplicada (monstruo e ítem, marcada por Christian con `//validateInput() DRY`) → `func validarRango(_ valor: Int, en rango: ClosedRange<Int>) -> Bool`.
-  - [ ] L90-92: resolver `chance ?? random100()` por drop → `func resolverChances(_ drops: [Drop]) -> [Double]` (candidato a vivir en `Simulator.swift`, no en `main.swift`, que declara "cero red, cero print").
-  - [ ] L99-103: imprimir lista de drops → `func imprimirDrops(_ drops: [Drop], chances: [Double])`.
+## 🥈 Prioridad 2 — práctica UIKit en paralelo
 
-## 💡 Ideas futuras — portfolio (sin empezar)
+- [ ] Avanzar el curso UIKit en las partes que seleccione Juan en la próxima sesión.
+- [ ] Ejercicio de práctica "vistas con API": pantalla con `UIImage` cargada desde una URL, un label de descripción y un botón que trae un ítem random (puede ser un array de structs con datos ya armados, o un get/query real a una API).
+- [ ] Curso complementario: [iOS 13 App Development Bootcamp (Udemy)](https://nisum.udemy.com/course/ios-13-app-development-bootcamp/) — AutoLayout/responsive, iOS design patterns.
 
-- **dropsim con cara visual:** Christian quiere que dropsim no quede solo en consola, con la mira en portfolio. Referencia propia ya existente: `C:\Users\csram\pruebal2` — "Return to Aden", un RPG por turnos ya bastante avanzado (Preact + Vite + TS, PWA, datos reales de `l2api.dev`, ya en `v0.1.0` de su propio versionado). No es el mismo proyecto ni se van a fusionar — es la referencia de "a dónde podría llegar" un proyecto de consola si se le agrega una capa visual. Sin plan concreto todavía.
-- **Juego de memoria (parejas) con skills de L2:** backend primero (para mostrar con Juan más adelante la parte visual). Una clase de L2 al inicio, expandible a elegir varias clases con sus skills. Nombres e imágenes desde la API si están disponibles, si no buscadas a mano. Mecánica: cartas boca arriba unos segundos → se dan vuelta → el usuario toca dos → si coinciden quedan reveladas/desaparecen, si no, se vuelven a tapar y continúa el loop. **Mecánica principal todavía no está del todo cerrada** (nota de Christian, 2026-10-01) — no arrancar implementación hasta definirla mejor.
-
-## 🎥 Videos — en curso (UIKit)
-
-Fuente actual: ["Curso UIKit en Swift para Principiantes"](https://www.youtube.com/watch?v=y1qkDJFxaLU&list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ&index=19), video único de ~5.5hs con 20 capítulos internos (no es una serie de videos separados — esto corrige la suposición anterior). Transcript completo procesado 2026-10-01 y filtrado en `ApuntesUIKit-Curso.md` — resumen por bloque temático, checklist de repaso y studyflow sugerido para las próximas sesiones. En curso, se sigue viendo de a poco.
-
-## 🖥️ Mac en la nube — PRIORIDAD #1, próxima sesión
-
-Christian marcó esto como lo primero a resolver en la próxima sesión, antes que cualquier otra cosa (2026-10-01).
-
-AWS EC2 Mac mini M1 (`mac2.metal`) investigado 2026-09-28: viable técnicamente, pero cobra por Dedicated Host con mínimo de 24hs por asignación (no importa el uso real dentro de esa ventana) — descartado. Juan investigaba MacinCloud en paralelo, sin resultado aún.
-
-Restricciones duras para la decisión final:
-- Costo máximo: USD 40/mes
-- Medio de pago: tarjeta Lemon (prepaga/virtual, cobra en USD)
-- Evidencia requerida: reviews/testimonios de usuarios reales de los últimos 6 meses, no solo marketing del proveedor
-
-Prompt de investigación preparado 2026-10-01 para correr en un chat aparte (celular) antes de la próxima sesión — pegar tal cual:
-
+Credenciales de la cuenta Nisum para loguear el curso — **no subir a ningún lado** (tampoco a Notion), borrarlas de aquí después de loguear el perfil de Chrome:
 ```
-Necesito contratar un Mac remoto en la nube para desarrollo iOS (compilar y correr apps Swift/UIKit en Xcode). Investigá y comparame opciones reales, con estas restricciones estrictas — descartá cualquier opción que no las cumpla:
-
-1. Costo mensual máximo: USD 40 (todo incluido, sin cargos ocultos de setup, overage o "pay per hour" que puedan superar ese techo si lo uso normal, full-time de desarrollo part-time: ~10-15hs semanales).
-2. Debe poder pagarse con tarjeta Lemon (Argentina) — en la práctica esto significa que tiene que aceptar una tarjeta prepaga/virtual Mastercard o Visa internacional cobrando en USD, sin requerir domicilio de facturación en EEUU ni verificación bancaria local de EEUU. Confirmá explícitamente si el proveedor acepta tarjetas prepagas/virtuales o si rechaza ese tipo de medio de pago (muchos servicios de hosting lo rechazan por antifraude).
-3. Necesito evidencia de que el servicio funciona de verdad: buscá reviews, posts de Reddit, foros de desarrolladores, threads de Twitter/X o videos de YouTube de los ÚLTIMOS 6 MESES (desde abril 2026 en adelante) de usuarios reales que lo hayan usado — no solo lo que dice el marketing del proveedor. Priorizá fuentes donde alguien cuente su experiencia real: tiempos de espera, caídas del servicio, soporte, facilidad para conectar por VNC/Screen Sharing desde una PC con Windows/WSL.
-
-Candidatos a investigar como mínimo: MacinCloud (planes Pay-As-You-Go y Managed), MacStadium, Scaleway Mac mini M1/M2, AWS EC2 Mac instances (ya lo descarté por el mínimo de 24hs de Dedicated Host — no lo evalúes de nuevo salvo que haya cambiado esa política), Xcode Cloud (no es un Mac remoto, es CI — aclarame si no aplica a mi caso), y cualquier otro proveedor legítimo que encuentres.
-
-Entregame una tabla comparativa con: proveedor, plan específico, costo mensual real en USD, si acepta tarjetas prepagas/virtuales (sí/no/no confirmado), y 1-2 líneas de evidencia reciente (con fuente) de que funciona o de problemas reportados. Terminá con una recomendación concreta de cuál contratar y por qué.
+nisum.udemy.com
+jramundo@nisum.com
+UdemyNisum21!
 ```
+
+## 🥉 Prioridad 3 — contenido de referencia (en curso)
+
+Fuente actual: ["Curso UIKit en Swift para Principiantes"](https://www.youtube.com/watch?v=y1qkDJFxaLU&list=PLeTOFRUxkMcoVxB1Dkt1Nh_N83XQtqYXQ&index=19), video único de ~5.5hs con 20 capítulos internos. Transcript completo procesado 2026-10-01 y filtrado en `ApuntesUIKit-Curso.md` — resumen por bloque temático, checklist de repaso y studyflow sugerido. En curso, se sigue viendo de a poco.
+
+## 💡 Ideas futuras — sin empezar
+
+- **Juego de memoria (parejas) con skills de L2:** backend primero (para mostrar con Juan más adelante la parte visual). Una clase de L2 al inicio, expandible a elegir varias clases con sus skills. Nombres e imágenes desde la API si están disponibles, si no buscadas a mano. Mecánica: cartas boca arriba unos segundos → se dan vuelta → el usuario toca dos → si coinciden quedan reveladas/desaparecen, si no, se vuelven a tapar y continúa el loop. **Mecánica principal todavía no está del todo cerrada** (nota de Christian, 2026-10-01) — no arrancar implementación hasta definirla mejor. Prioridad baja frente a CirujeAR.

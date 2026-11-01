@@ -105,3 +105,38 @@ Resumen conceptual previo al video [Cómo crear vistas por código con UIKit y A
 - **"Unable to satisfy constraints"** = el solver no tiene info suficiente para una solución única (falta tamaño y la vista no tiene *intrinsic content size*, o dos constraints se contradicen) — no es un crash de lógica de negocio.
 
 _(pendiente: notas del video una vez visto)_
+
+## UIScrollView — contenido que excede la pantalla
+
+Practicado 2026-11-01 sobre el `cardsStack` horizontal de "Podrían interesarte" (Dashboard, CirujeAR). AutoLayout solo no escrolea: si el contenido mide más que la pantalla, se corta. `UIScrollView` separa dos tamaños:
+
+- **El visor** (`frameLayoutGuide`) — lo que se ve, mismo tamaño que el scroll view. Se pinea normal al padre.
+- **El contenido** (`contentLayoutGuide`) — puede medir más que el visor. No se setea `contentSize` a mano (API vieja); con AutoLayout se deduce solo de las constraints de la vista que metés adentro.
+
+Patrón:
+
+```swift
+scrollView.translatesAutoresizingMaskIntoConstraints = false
+view.addSubview(scrollView)
+NSLayoutConstraint.activate([ /* pinear scrollView al padre, como cualquier vista */ ])
+
+innerView.translatesAutoresizingMaskIntoConstraints = false
+scrollView.addSubview(innerView)
+NSLayoutConstraint.activate([
+    innerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+    innerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+    innerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+    innerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor)
+])
+```
+
+Con eso solo, escrolea en las dos direcciones. Para una sola dirección, se "congela" el eje que no debe crecer igualándolo al visor:
+- Solo horizontal: `innerView.heightAnchor.constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)`.
+- Solo vertical: `innerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)`.
+
+`showsHorizontalScrollIndicator` / `showsVerticalScrollIndicator` = `false` oculta la barrita fina de scroll (cosmético, no afecta el scroll en sí).
+
+**2 trampas nuevas, además de las 3 de la sección de AutoLayout de arriba** — ninguna de las dos las agarra el compilador, código 100% válido, solo se ven corriendo la app:
+
+1. **Confundir quién es hijo de quién.** Un `UIView` solo puede tener un superview a la vez. Si por error metés la vista de contenido directo al stack de afuera (`sectionsStack.addArrangedSubview(cardsStack)`) en vez del scroll view (`sectionsStack.addArrangedSubview(cardsScrollView)`), y después la volvés a mover adentro del scroll view (`cardsScrollView.addSubview(cardsStack)`) — la vista de contenido queda "colgada" dentro de un scroll view que nunca entró a la jerarquía de pantalla. Resultado: nada crashea, pero la vista es invisible.
+2. **`UIScrollView` no tiene *intrinsic content size*.** A diferencia de un `UILabel` (que mide lo que su texto necesita), un scroll view vacío no tiene tamaño propio — si el stack que lo contiene usa `alignment = .leading` (no estira), el scroll view colapsa a ancho/alto 0 sin una constraint explícita. Y si además una de esas constraints faltantes termina relacionando el scroll view con una vista de otra rama del árbol (la trampa #1), AutoLayout no encuentra ancestro común y **tira una excepción real — la app crashea** (`Unable to activate constraint... no common ancestor`), distinto del warning silencioso de "Unable to satisfy constraints".
