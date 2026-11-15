@@ -140,3 +140,30 @@ Con eso solo, escrolea en las dos direcciones. Para una sola dirección, se "con
 
 1. **Confundir quién es hijo de quién.** Un `UIView` solo puede tener un superview a la vez. Si por error metés la vista de contenido directo al stack de afuera (`sectionsStack.addArrangedSubview(cardsStack)`) en vez del scroll view (`sectionsStack.addArrangedSubview(cardsScrollView)`), y después la volvés a mover adentro del scroll view (`cardsScrollView.addSubview(cardsStack)`) — la vista de contenido queda "colgada" dentro de un scroll view que nunca entró a la jerarquía de pantalla. Resultado: nada crashea, pero la vista es invisible.
 2. **`UIScrollView` no tiene *intrinsic content size*.** A diferencia de un `UILabel` (que mide lo que su texto necesita), un scroll view vacío no tiene tamaño propio — si el stack que lo contiene usa `alignment = .leading` (no estira), el scroll view colapsa a ancho/alto 0 sin una constraint explícita. Y si además una de esas constraints faltantes termina relacionando el scroll view con una vista de otra rama del árbol (la trampa #1), AutoLayout no encuentra ancestro común y **tira una excepción real — la app crashea** (`Unable to activate constraint... no common ancestor`), distinto del warning silencioso de "Unable to satisfy constraints".
+
+## Concurrencia / GCD (Grand Central Dispatch)
+
+Surgió armando el Worker del molde VIP de CirujeAR (Dashboard) — no es tema visto con Juan todavía.
+
+**Qué es un hilo (thread):** una secuencia de instrucciones que se ejecutan una detrás de la otra, en orden, por un solo "trabajador". La app arranca con un solo hilo, el **hilo principal** (main thread), que es el único que puede dibujar la pantalla y responder a toques. Si ese mismo hilo se pone a hacer algo lento (leer un archivo pesado, esperar una respuesta de red), no puede dibujar mientras tanto — la app "se tilda": no está rota, está ocupada.
+
+**Qué es GCD:** el "gerente de personal" del sistema operativo. En vez de crear/manejar hilos a mano, se empaqueta el trabajo en un bloque de código (closure) y se le entrega a una fila (`DispatchQueue`) — GCD decide qué hilo disponible lo ejecuta.
+
+**Patrón típico — ir a background y volver a main:**
+
+```swift
+DispatchQueue.global(qos: .userInitiated).async {
+    // trabajo lento (leer archivo, parsear, llamar red) — corre en background
+    DispatchQueue.main.async {
+        // acá sí se puede tocar UIKit (labels, tablas, alerts)
+    }
+}
+```
+
+- **`DispatchQueue`** — una fila de trabajo administrada por GCD.
+- **`.global()`** — una fila de background compartida (no la principal).
+- **`qos:`** ("quality of service") — qué tan urgente es el trabajo, para que GCD priorice. 4 niveles típicos, de más a menos urgente: `.userInteractive` (animación en vivo) → `.userInitiated` (el usuario está esperando este resultado — el caso del Worker del Dashboard) → `.utility` (tarea larga con progreso, sin apuro inmediato) → `.background` (mantenimiento invisible).
+- **`.async`** — "no bloquees esperando esto, ejecutalo y avisá después" (lo opuesto, `.sync`, se queda esperando ahí parado — casi nunca se usa para este tipo de trabajo).
+- **`DispatchQueue.main`** — la fila especial que siempre corre en el hilo principal. Es el único lugar permitido para tocar UIKit.
+
+**Regla práctica (sin memorizar los 4 niveles de `qos` todavía):** background para esperar/calcular algo lento, main para cualquier cosa que termine actualizando lo que se ve en pantalla — incluido llamar a un `completion` que va a actualizar un label.

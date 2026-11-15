@@ -74,7 +74,7 @@
   - **Flujo de sync sin `/ios-sync`:** el comando ya no existe. Se reemplazó con `rsync` VM → clon local (`codebase/CirujeAR`, con `--delete` sobre `CirujeAR/` y `CirujeAR.xcodeproj/`) → commit/push desde WSL.
   - **Para abrir VS Code Remote-SSH desde WSL:** usar el `code` de Windows (`/mnt/c/Users/csram/AppData/Local/Programs/Microsoft VS Code/bin/code --remote ssh-remote+macos-vm /Users/csr/ios-learning-projects/CirujeAR`). El `code` de la ventana WSL ignora `--remote`.
   - **Quedó sin commitear a propósito:** `App/CirujeAR/SceneDelegate.swift` en el clon local, dentro de la carpeta huérfana, que se borra entera más adelante.
-  - **Checkpoint 2026-11-16 (antes de Juan a las 12:00), en este orden:**
+  - **Checkpoint 2026-11-16 (antes de Juan a las 12:00), en este orden.** Solo deuda técnica (puntos 1-6); el Listado queda para después. Christian se levanta a las 8:00, arranca ~8:30: entra justo, sin colchón. Si el tiempo no alcanza, `async`/`await` (punto 5) es el que se corta o se ve con Juan.
     1. Usar `Medal` en el Presenter: `Medal(position: index)?.emoji` y el espacio lo arma el Presenter.
     2. Encabezados faltantes (`Medal.swift`, `Interactor`, `Presenter`, `Router`, `Worker`, celdas, `DashboardModels`) + comentario duplicado en `CirujanoCell` (líneas 4-6) + línea suelta vieja en `DashboardRouter.swift` ("arriba de sobra…").
     3. Convención de AutoLayout de Juan + bug de márgenes cortados en las celdas.
