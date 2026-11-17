@@ -132,12 +132,7 @@ Puntaje y badges ya cerrados (2026-10-26): avistamiento = 1 punto, donación = 2
 - [ ] Ejercicio de práctica "vistas con API": pantalla con `UIImage` cargada desde una URL, un label de descripción y un botón que trae un ítem random (puede ser un array de structs con datos ya armados, o un get/query real a una API).
 - [ ] Curso complementario: [iOS 13 App Development Bootcamp (Udemy)](https://nisum.udemy.com/course/ios-13-app-development-bootcamp/) — AutoLayout/responsive, iOS design patterns.
 
-Credenciales de la cuenta Nisum para loguear el curso — **no subir a ningún lado** (tampoco a Notion), borrarlas de aquí después de loguear el perfil de Chrome:
-```
-nisum.udemy.com
-jramundo@nisum.com
-UdemyNisum21!
-```
+Credenciales de la cuenta Nisum: borradas de este archivo el 2026-11-17 (siguen en el historial de git; rotar la contraseña si hace falta).
 
 ## 🥉 Prioridad 3 — contenido de referencia (en curso)
 
