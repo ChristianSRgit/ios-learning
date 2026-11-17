@@ -167,3 +167,452 @@ DispatchQueue.global(qos: .userInitiated).async {
 - **`DispatchQueue.main`** — la fila especial que siempre corre en el hilo principal. Es el único lugar permitido para tocar UIKit.
 
 **Regla práctica (sin memorizar los 4 niveles de `qos` todavía):** background para esperar/calcular algo lento, main para cualquier cosa que termine actualizando lo que se ve en pantalla — incluido llamar a un `completion` que va a actualizar un label.
+
+
+## Molde VIP del Dashboard — explicaciones que vivían como comentarios en el código
+
+Sacadas del código de CirujeAR el 2026-11-17, cuando se limpió para dejarlo legible (commit `207e72e`). Cada bloque va con la línea de código que explicaba. Algunas mencionan "archivo N": es el orden en que se armó el molde (1 Models, 2 Worker, 3 Interactor, 4 Presenter, 5 Router, 6 CirujanoCell, 7 ObjetoCell, 8 ViewController).
+
+
+### `DashboardModels.swift`
+
+```swift
+let score: Int
+```
+
+> 0 a 10 — el Presenter lo va a convertir en un color
+
+```swift
+enum Dashboard {
+```
+
+> Esto es la parte nueva de VIP. La convención (no es obligación de Swift,
+> es la convención de este patrón) es armar un "caso de uso" con 3 tipos:
+>
+>   Request   → lo que el ViewController le pide al Interactor ("traeme el dashboard")
+>   Response  → lo que el Interactor le devuelve al Presenter (datos crudos)
+>   ViewModel → lo que el Presenter le devuelve al ViewController (ya formateado,
+>               listo para poner en un label/celda, nada de lógica)
+>
+> ¿Por qué un enum "Dashboard" por afuera, y otro enum "FetchDashboard" adentro?
+> Es solo una forma de AGRUPAR nombres, como ponerle apellido a algo para no
+> confundirlo con el "Request" de otra pantalla.
+> El enum de afuera (Dashboard) = la pantalla.
+> El enum de adentro (FetchDashboard) = la acción/caso de uso dentro de esa pantalla
+> (si Dashboard tuviera otra acción, ej. "marcar como favorito", sería un
+> segundo enum hermano: Dashboard.MarkFavorite.Request, etc.)
+
+```swift
+}
+```
+
+> vacío a propósito: pedir el dashboard no necesita parámetros.
+> si más adelante pido "dashboard de tal usuario",
+> ahí le agregaría: let userId: String
+
+```swift
+let leaderboard: [Cirujano]
+```
+
+> datos tal cual vienen del Worker, sin formatear todavía
+
+```swift
+let title: String
+```
+
+> datos ya traducidos a "texto/color listo para pantalla"
+
+
+### `DashboardWorker.swift`
+
+```swift
+enum DashboardWorkerError: Error {
+```
+
+> Result<Success, Failure> es un enum nativo de Swift con dos casos:
+> .success(Response) o .failure(Error). Es la forma moderna de devolver
+> "o salió bien, o salió mal" sin usar un Bool aparte + un optional aparte.
+
+```swift
+private struct DashboardMock: Decodable {
+```
+
+> struct privado: solo existe para que JSONDecoder tenga algo a lo que
+> mapear el archivo .json completo. No lo usa nadie fuera de este archivo.
+
+```swift
+DispatchQueue.global(qos: .userInitiated).async {
+```
+
+> DispatchQueue.global = background. Esto es la parte de tus notas
+> "background mientras carga el home / traes datos sin molestar al
+> usuario": leer y parsear el archivo pasa en un hilo secundario,
+> la pantalla no se congela mientras tanto (hoy es instantáneo
+> porque es un archivo chiquito, pero el día que sea una llamada
+> de red real a Supabase, esto mismo evita que la UI se trabe).
+> qos quality of service
+
+```swift
+DispatchQueue.main.async { completion(.failure(DashboardWorkerError.mockFileNotFound)) }
+```
+
+> DispatchQueue.main = volver al hilo principal. SIEMPRE que
+> vayas a tocar UI (o llamar algo que termine tocando UI,
+> como este completion) hay que volver a .main primero.
+
+
+### `DashboardWorkerProtocol.swift`
+
+```swift
+protocol DashboardWorkerProtocol {
+```
+
+> ¿Por qué un protocolo para algo que hoy tiene una sola implementación?
+> Para poder reemplazar el Worker real por uno falso en un test, sin tocar
+> el Interactor.
+
+```swift
+func fetchDashboard(completion: @escaping (Result<Dashboard.FetchDashboard.Response, Error>) -> Void)
+```
+
+> @escaping = el closure "completion" no se ejecuta ya mismo, se va a
+> ejecutar más tarde (cuando termine de leer el archivo). Sin @escaping,
+> Swift asume que el closure se usa y se descarta en el momento, y
+> tira error de compilación porque lo estamos guardando para después.
+
+
+### `DashboardInteractor.swift`
+
+```swift
+final class DashboardInteractor: DashboardBusinessLogic,
+```
+
+> Fijate que la clase implementa DOS protocolos a la vez, separados por coma.
+> No es nada especial de VIP — en Swift una clase puede conformar a
+> cuantos protocolos quiera, cada uno es "una lista de cosas que prometo
+> tener". BusinessLogic = lo que el ViewController puede pedirle.
+> DataStore = lo que el Router puede leerle. Son audiencias distintas.
+
+```swift
+var worker: DashboardWorkerProtocol = DashboardWorker()
+```
+
+> Tipado como el PROTOCOLO (DashboardWorkerProtocol), no como la clase
+> concreta (DashboardWorker) — por la misma razón que vimos en el
+> archivo 2: así, el día de mañana, puedo poner acá un Worker falso
+> (para tests, o un "DashboardWorkerSupabase") sin tocar esta línea
+> de más que el nombre de la clase.
+
+```swift
+worker.fetchDashboard { [weak self] result in
+```
+
+> [weak self] = "agarrá una referencia débil a self, no fuerte".
+> Por qué: el closure que le paso al Worker se guarda y se llama
+> DESPUÉS (recordá el @escaping del archivo 2). Si ese closure
+> capturara "self" fuerte, y en algún escenario self (el Interactor)
+> dejara de existir antes de que el Worker responda, el closure
+> lo mantendría vivo artificialmente — eso es un "retain cycle"
+> (nadie se libera cuando debería, memory leak). Con weak, si self
+> ya no existe cuando llega la respuesta, simplemente no hace nada
+> (por eso el "self?" con signo de pregunta en las líneas de abajo).
+
+```swift
+switch result {
+```
+
+> switch sobre un Result: Swift te obliga a manejar los dos
+> casos posibles (no hay forma de "olvidarse" del failure).
+> "let response" / "let error" desempaquetan el valor asociado
+> a cada caso, igual que hacías con un optional en un if-let.
+
+
+### `DashboardDataPassing.swift`
+
+```swift
+protocol DashboardDataPassing {
+```
+
+> Esto es nuevo: un protocolo puede exigir no solo funciones, sino también
+> PROPIEDADES. "{ get }" significa "quien conforme a esto tiene que poder
+> LEER una propiedad llamada dataStore" — no importa si la implementación
+> es una `var` normal, una `let`, o una propiedad calculada; el protocolo
+> no se mete en el cómo, solo exige que se pueda leer.
+
+
+### `DashboardPresenter.swift`
+
+```swift
+weak var viewController: DashboardDisplayLogic?
+```
+
+> "weak" otra vez, pero por una razón DISTINTA a la del archivo 3.
+> Ahí era un closure guardado para después; acá es una cadena de
+> propiedades que se apuntan entre sí:
+>   ViewController "tiene fuerte" → Interactor
+>   Interactor      "tiene fuerte" → Presenter
+>   Presenter       "tiene fuerte" → ViewController (si no pusiéramos weak)
+> Eso cierra un círculo: A sostiene a B, B sostiene a C, C sostiene a A.
+> Ninguno de los tres se libera nunca, aunque ya nadie afuera los use
+> (memory leak permanente). "weak" en este último eslabón rompe el
+> círculo — el ViewController sigue siendo "el dueño" de toda la cadena,
+> el Presenter solo lo "conoce" sin poseerlo.
+
+```swift
+let rows = response.leaderboard.enumerated().map { index, cirujano in
+```
+
+> .map transforma un array en OTRO array, aplicando la misma
+> operación a cada elemento. Acá: por cada Cirujano (datos crudos)
+> devuelve un CirujanoRowViewModel (datos para pantalla). Mismo
+> largo de array a la entrada y a la salida, distinto tipo.
+> Es el equivalente a escribir:
+>   var rows: [CirujanoRowViewModel] = []
+>   for cirujano in response.leaderboard {
+>       rows.append(CirujanoRowViewModel(...))
+>   }
+> pero sin el array vacío ni el for a mano.
+> (index, cirujano) — index arranca en 0, igual que un array.
+> actualmente no estan ordenados, solamente agrega la medalla por la posicion
+> que ya estan ordenadas, pero esta anotado a agregar la logica del sort
+
+```swift
+viewController?.displayError(message: error.localizedDescription)
+```
+
+> localizedDescription: toda instancia de Error trae esto de regalo,
+> convierte el error en un texto legible para mostrar en pantalla.
+
+```swift
+private func color(for score: Int) -> UIColor {
+```
+
+> switch con RANGOS en vez de valores puntuales. "..." es un rango
+> cerrado (incluye los dos extremos). 0...3 = "0, 1, 2 o 3".
+> "default" agarra todo lo que no cayó en ningún case de arriba
+> (en este caso, 7 a 10) — así cubrimos los 3 tramos de FEATURES.md
+> (rojo 0-3, amarillo 4-6, verde 7-10) sin tener que escribir 7...10.
+
+
+### `DashboardRouter.swift`
+
+```swift
+final class DashboardRouter: NSObject, DashboardRoutingLogic, DashboardDataPassing {
+```
+
+> ¿Por qué hereda de NSObject? Es la convención de Clean Swift: el Router
+> suele necesitar cosas del mundo UIKit/Objective-C para las transiciones
+> entre pantallas (segues, animaciones custom) que requieren que la clase
+> sea NSObject. Hoy no lo estamos usando para nada concreto, pero se deja
+> así desde el molde porque sacarlo después, cuando ya haga falta, puede
+> traer dolores de cabeza.
+
+```swift
+weak var viewController: DashboardViewController?
+```
+
+> Fijate la diferencia con el Presenter (archivo 4): ahí viewController
+> era del tipo del PROTOCOLO (DashboardDisplayLogic). Acá es del tipo
+> de la CLASE concreta (DashboardViewController). Por qué: el Router,
+> cuando navegue de verdad, va a necesitar llamar métodos reales de
+> UIKit (present(_:), navigationController?.pushViewController(...))
+> que no están en ningún protocolo nuestro — necesita el objeto real,
+> no una versión recortada de él.
+
+```swift
+weak var dataStore: DashboardDataStore?
+```
+
+> el Router lee el dataStore pero no es su dueño, el dueño es el VC
+> arriba de sobra (una var siempre se puede leer, y además escribir).
+
+
+### `DashboardViewController.swift`
+
+```swift
+var interactor: DashboardBusinessLogic?
+```
+
+> El Interactor tipado como protocolo (BusinessLogic) — el ViewController
+> solo sabe que "le puede pedir el dashboard", no conoce al Interactor real.
+
+```swift
+var router: (NSObjectProtocol & DashboardRoutingLogic & DashboardDataPassing)?
+```
+
+> Tipo compuesto raro a primera vista: "NSObjectProtocol & DashboardRoutingLogic
+> & DashboardDataPassing" significa "algo que cumple LOS TRES protocolos a la vez".
+> Necesitamos los tres porque el Router (archivo 5) hereda de NSObject y
+> conforma a los otros dos — esta es la forma de decir "quiero esas tres
+> promesas juntas" sin referenciar la clase concreta DashboardRouter.
+
+```swift
+init() {
+```
+
+> Dos inicializadores, misma razón que viste en CirujanoCell (archivo 6):
+> UIViewController también exige los dos. init() es el que se termina
+> usando (SceneDelegate llama DashboardViewController() sin nib).
+
+```swift
+private func setup() {
+```
+
+> Acá se crean las 3 piezas que faltaban (Interactor, Presenter, Router)
+> y se las "presenta" entre sí — cada una se guarda una referencia a la
+> siguiente en la cadena. Es el único lugar de todo el molde donde se
+> crean con "new"/inicializador directo; en cualquier otro lado siempre
+> se habla a través de protocolos.
+
+```swift
+interactor.presenter = presenter
+```
+
+> Interactor → Presenter
+
+```swift
+presenter.viewController = self
+```
+
+> Presenter → View (weak, visto en archivo 4)
+
+```swift
+router.viewController = self
+```
+
+> Router → View (weak, visto en archivo 5)
+
+```swift
+router.dataStore = interactor
+```
+
+> Router lee del Interactor (el DataStore vacío de archivo 3)
+
+```swift
+tableView.dataSource = self
+```
+
+> "yo (self) soy quien le da los datos" — ver parte 3
+
+```swift
+tableView.delegate = self
+```
+
+> "yo (self) soy quien se entera de sus eventos" — ver parte 3
+
+```swift
+private var leaderboardRows: [CirujanoRowViewModel] = []
+```
+
+> Arrancan vacíos; se llenan cuando llega la respuesta del Presenter (abajo).
+
+```swift
+interactor?.fetchDashboard(request: Dashboard.FetchDashboard.Request())
+```
+
+> Acá arranca todo: le pido al Interactor que busque los datos.
+> Esto dispara la cadena completa: Interactor → Worker → Interactor → Presenter → acá.
+
+```swift
+leaderboardTableView.reloadData()
+```
+
+> reloadData() = "repintate, tus datos cambiaron" — dispara de nuevo
+> las funciones de la parte 3 para cada fila/celda visible.
+
+```swift
+func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+```
+
+> UIKit pregunta esto antes de dibujar: "¿cuántas filas hay?"
+
+```swift
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+```
+
+> UIKit pregunta esto por CADA fila visible: "dame la celda para esta posición"
+
+```swift
+let cell = tableView.dequeueReusableCell(withIdentifier: CirujanoCell.reuseID, for: indexPath) as! CirujanoCell
+```
+
+> dequeueReusableCell = pedile a la tabla una celda YA CREADA y reciclada
+> (el "renderiza solo lo que se ve" de tus notas del principio) en vez
+> de crear una UITableViewCell nueva cada vez.
+> "as! CirujanoCell" = "esto que me devolvió es genérico (UITableViewCell),
+> yo sé que en realidad es un CirujanoCell, convertímelo" — es seguro acá
+> porque dos líneas arriba (en el lazy var) registramos que ESTE
+> identificador siempre corresponde a CirujanoCell.
+
+
+### `DashboardDisplayLogic.swift`
+
+```swift
+protocol DashboardDisplayLogic: AnyObject {
+```
+
+> Es lo que le permite al Presenter hablarle al ViewController sin conocerlo directamente
+> (solo conoce "algo que sepa mostrar un Dashboard.ViewModel o un error").
+
+
+### `CirujanoCell.swift`
+
+```swift
+static let reuseID = "CirujanoCell"
+```
+
+> "static" = esta constante no pertenece a NINGUNA instancia particular
+> de CirujanoCell, pertenece a la CLASE en sí. Se accede como
+> CirujanoCell.reuseID, sin necesitar crear una celda primero.
+> La usamos para "etiquetar" el tipo de celda al registrarla y al
+> reciclarla (lo vas a ver en el archivo del ViewController).
+
+```swift
+override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+```
+
+> Acá aparecen DOS inicializadores, y los dos son obligatorios al
+> subclasear UITableViewCell (o cualquier clase de UIKit, en realidad).
+>
+> 1. init(style:reuseIdentifier:) — el que se usa cuando creás la celda
+>    por código (que es nuestro caso, vía register(_:forCellReuseIdentifier:)).
+>
+> 2. required init?(coder:) — UIKit lo exige SIEMPRE, incluso si nunca
+>    vas a cargar esta celda desde un Storyboard/XIB. "required" es una
+>    palabra que obliga a TODA subclase a implementarlo también (a
+>    diferencia de "override", que es optativo si no cambiás nada) —
+>    es la forma de UIKit de garantizar que, pase lo que pase, siempre
+>    va a existir una forma de reconstruir el objeto. Como nosotros no
+>    usamos Storyboards, el cuerpo queda simple: solo llama al padre.
+
+```swift
+contentView.addSubview(stack)
+```
+
+> IMPORTANTE: a una UITableViewCell no se le agregan subvistas
+> directo a ella (self.addSubview), sino a su "contentView".
+> La celda ya trae de fábrica una estructura interna (contentView +
+> espacio para accessoryView, el ">" que a veces ves a la derecha).
+> contentView es la parte "en blanco" que es nuestra para decorar;
+> además es la que UIKit anima/resalta sola cuando tocás la celda.
+
+```swift
+func configure(with viewModel: CirujanoRowViewModel) {
+```
+
+> Este método NO lo exige UIKit — lo inventamos nosotros, como una
+> API simple y prolija para que, cada vez que la tabla recicle esta
+> celda para una fila distinta, alguien de afuera (el ViewController)
+> pueda "rellenarla" con los datos nuevos en una sola llamada.
+
+
+### `ObjetoCell.swift`
+
+```swift
+contentView.backgroundColor = .systemGray5
+```
+
+> backgroundColor/cornerRadius van en contentView, no en self —
+> misma razón que en CirujanoCell: contentView es la parte que
+> nos pertenece para decorar.
+
