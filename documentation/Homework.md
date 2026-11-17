@@ -82,6 +82,15 @@
     5. Worker a `async`/`await`.
     6. Borrar `App/CirujeAR/` huérfana.
     7. Pantalla nueva: Listado de objetos.
+- **Sesión 2026-11-17 (CirujeAR) — deuda técnica, segunda tanda + decisión de navegación.** Commits `eb2ae81`, `207e72e`, `7817c62` en CirujeAR, pusheados. La sesión con Juan se movió: estaba para el miércoles 18, lo más probable es que sea el jueves siguiente.
+  - **Hecho:** el Presenter usa `Medal` (tipeado por Christian). Fuera los comentarios didácticos del código y reindentado con swift-format, hecho por Claude a pedido de Christian para ahorrar tiempo; las explicaciones pasaron a `ApuntesTeoria.md`, sección "Molde VIP del Dashboard". Bug de márgenes del leaderboard resuelto: había un margen doble porque la celda sumaba su `layoutMarginsGuide` a los márgenes de la tabla. Constraints contra `contentView` con la convención de Juan y `separatorInset = .zero`. Verificado con captura del Simulator.
+  - **Pendiente visto en la captura:** la tabla del leaderboard tiene alto fijo de 180 y deja un hueco con 3 filas, así que hay que calcular el alto según la cantidad de filas. El título sigue diciendo "Cirujanos TOP" en vez de "Eco Cirujas TOP"; se arregla con localización.
+  - **Decisión de navegación (Christian, 2026-11-17) — cambia la nota de Juan del 10/11 ("Listado con navigation bar"):** primero va una **tab bar** con 4 pestañas, con referencia en pasitoapp (logo centrado arriba y botonera abajo):
+    1. **Inicio**: el Dashboard actual.
+    2. **Objetos**: el listado de objetos, con un botón "Explorar el mapa" (referencia: la pantalla Premios de pasito). El mapa viene después, como *push* dentro de esta pestaña, y ahí entra la navigation bar.
+    3. **Eventos**: solo un cartel de "Próximamente". A futuro se cargan a mano desde los grupos de Facebook o se scrapean ferias y eventos gratuitos de la web de la ciudad.
+    4. **Actividad** (nombre a confirmar): puntos y ranking del usuario, más los objetos que levantó (los marca el propio usuario).
+  - **Checkpoint próxima sesión:** localización + colores → `async`/`await` → borrar `App/` huérfana → tab bar.
 
 ## 🥇 Prioridad 1 — CirujeAR
 
