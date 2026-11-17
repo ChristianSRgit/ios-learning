@@ -115,9 +115,16 @@ Plan completo de pantallas y del sistema de puntaje "Eco Ciruja" (avistamientos,
 
 Puntaje y badges ya cerrados (2026-10-26): avistamiento = 1 punto, donación = 2 puntos. Badges son progresión de avistamientos: Siempre Alerta (10), Sentido Arácnido (25), Ojo de Águila (50) — se descartó "Ojo Clínico".
 
-**Próximo paso:** deuda técnica a mitad de camino (ver checkpoint de la sesión 2026-11-15). El molde VIP del Dashboard quedó aprobado por Juan el 2026-11-10 (ver mini-log de esa fecha para el detalle completo de feedback a aplicar). Dos frentes, no necesariamente en este orden — a definir con Christian:
-1. **Deuda técnica sobre el Dashboard ya hecho:** reorganizar `Home/` en subcarpetas, migrar el Worker a `async`/`await`, `weak` en `DashboardRouter.dataStore`, enum de medallas, localización de textos/colores, fix del bug de márgenes cortados en las celdas, rename de archivo a `DashboardViewController.swift`.
-2. **Pantalla nueva:** Listado de objetos (no el mapa todavía) — primera vez que el Router conecta de verdad Dashboard → otra pantalla, necesita navigation bar.
+**Próximo paso (actualizado 2026-11-17):** la deuda técnica que pidió Juan el 10/11 está casi cerrada. Navegación e identidad están decididas en [`docs/adr/0002-navegacion-tab-bar.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/adr/0002-navegacion-tab-bar.md) y [`docs/brand/identidad-visual.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/brand/identidad-visual.md). Próxima sesión con Juan: jueves 26/11.
+
+- ✅ `Home/` en subcarpetas, un protocolo por archivo, `DashboardViewController.swift`, encabezados, `weak` en `dataStore`, enum `Medal`, márgenes del leaderboard, colores en el Asset Catalog (paleta Eco Cirujeo), textos en el String Catalog, `App/` huérfana borrada, nombre visible "Eco Cirujeo" e ícono de la app.
+- ⬜ **Orden para seguir:**
+  1. Worker a `async`/`await` (la última deuda de Juan, teoría nueva).
+  2. Alto del leaderboard según la cantidad de filas.
+  3. Tab bar con 4 pestañas (Inicio, Objetos, Eventos, Actividad) + cabecera con el wordmark "Eco Cirujeo" centrado arriba.
+  4. Pestaña Objetos: listado con nav bar (el Mapa entra después por *push*).
+  5. Tarjeta de objeto con foto, nombre y banda diagonal Malo/Bueno/Excelente.
+  6. Pase visual (sin apuro): splash con `logo-vertical.png`, fuentes de la marca.
 
 ## 🥈 Prioridad 2 — práctica UIKit en paralelo
 
