@@ -91,7 +91,13 @@
     3. **Eventos**: solo un cartel de "Próximamente". A futuro se cargan a mano desde los grupos de Facebook o se scrapean ferias y eventos gratuitos de la web de la ciudad.
     4. **Actividad** (nombre a confirmar): puntos y ranking del usuario, más los objetos que levantó (los marca el propio usuario).
   - **Cerrado (misma sesión):** la nav bar va **solo en Objetos**, que es donde vive el Mapa. Inicio muestra vista previa de ranking y recolecciones con link a Actividad. Eventos reemplaza a "Desafíos". Identidad visual **Eco Cirujeo** (guía + logos) guardada en `docs/brand/` del repo: wordmark centrado arriba, isotipo (sillón) como ícono, paleta `#1D3124` / `#F5F2EB` / `#FFFFFF`. Tarjeta de objeto con **banda diagonal** de estado arriba a la derecha. Todo en [`docs/adr/0002-navegacion-tab-bar.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/adr/0002-navegacion-tab-bar.md) y `FEATURES.md` (commit `3f2bf22`).
-  - **Checkpoint próxima sesión:** localización + colores (la paleta de la marca) → `async`/`await` → borrar `App/` huérfana → tab bar → tarjeta con banda diagonal.
+  - **Cierre de la sesión (misma tarde):** nombre visible **"Eco Cirujeo"** (solo `CFBundleDisplayName`; proyecto y repo siguen como `CirujeAR`). Etiquetas de la banda: **Malo / Bueno / Excelente**. Pestaña "Actividad", nombre cerrado. Paleta en el Asset Catalog (`verdePrincipal`, `fondoPapel`, `acento`, `estadoMalo/Bueno/Excelente`) usada en Presenter y VC. Fondos `.clear` en tabla, collection y celda. Idioma base: español. **String Catalog** con los 6 textos del Dashboard (`String(localized:)`): el título pasa a "Eco Cirujas TOP" y los puntos salen formateados por región ("1.280 pts"). `App/` huérfana borrada. Commits `e441832` → `a2054e9`.
+  - **Aprendido de Xcode:** si Xcode avisa *"The file CirujeAR.xcodeproj has been modified by another application"*, elegir **Use Version on Disk**. El cambio de afuera lo hizo Claude (por ejemplo el nombre visible o el idioma), y "Keep Xcode Version" lo pisaría.
+  - **Checkpoint próxima sesión:**
+    1. Worker a `async`/`await`, la última deuda de Juan. Es teoría nueva: arrancar por la doc que pasó Juan.
+    2. Alto del leaderboard según la cantidad de filas: hoy está fijo en 180 y deja un hueco.
+    3. Tab bar (ADR 0002).
+    4. Tarjeta de objeto con foto, nombre y banda diagonal.
 
 ## 🥇 Prioridad 1 — CirujeAR
 
