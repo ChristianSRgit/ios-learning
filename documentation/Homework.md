@@ -96,8 +96,11 @@
   - **Checkpoint próxima sesión:**
     1. Worker a `async`/`await`, la última deuda de Juan. Es teoría nueva: arrancar por la doc que pasó Juan.
     2. Alto del leaderboard según la cantidad de filas: hoy está fijo en 180 y deja un hueco.
-    3. Tab bar (ADR 0002).
-    4. Tarjeta de objeto con foto, nombre y banda diagonal.
+    3. Tab bar (ADR 0002): 4 pestañas con íconos SF Symbols, y la **cabecera con el wordmark "Eco Cirujeo" centrado arriba** (como "PASITO" en la referencia), que reemplaza el `titleLabel` "Dashboard".
+    4. Pestaña Objetos: listado con nav bar.
+    5. Tarjeta de objeto con foto, nombre y banda diagonal.
+    6. (Pase visual, sin apuro) Splash con el logo vertical y fuentes de la marca.
+  - **Ícono de la app cargado (2026-11-17):** logotipo principal (sillón recortado + nombre), commit `dc12b1a`.
 
 ## 🥇 Prioridad 1 — CirujeAR
 
