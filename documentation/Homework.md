@@ -115,16 +115,20 @@ Plan completo de pantallas y del sistema de puntaje "Eco Ciruja" (avistamientos,
 
 Puntaje y badges ya cerrados (2026-10-26): avistamiento = 1 punto, donación = 2 puntos. Badges son progresión de avistamientos: Siempre Alerta (10), Sentido Arácnido (25), Ojo de Águila (50) — se descartó "Ojo Clínico".
 
-**Próximo paso (actualizado 2026-11-17):** la deuda técnica que pidió Juan el 10/11 está casi cerrada. Navegación e identidad están decididas en [`docs/adr/0002-navegacion-tab-bar.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/adr/0002-navegacion-tab-bar.md) y [`docs/brand/identidad-visual.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/brand/identidad-visual.md). Próxima sesión con Juan: jueves 26/11.
+**Próximo paso (actualizado 2026-11-20):** la deuda técnica que pidió Juan el 10/11 está cerrada: el Worker pasó a `async`/`await` el 20/11 ([PR #1](https://github.com/ChristianSRgit/CirujeAR/pull/1)). Navegación e identidad están decididas en [`docs/adr/0002-navegacion-tab-bar.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/adr/0002-navegacion-tab-bar.md) y [`docs/brand/identidad-visual.md`](https://github.com/ChristianSRgit/CirujeAR/blob/main/docs/brand/identidad-visual.md). Próxima sesión con Juan: jueves 26/11.
 
 - ✅ `Home/` en subcarpetas, un protocolo por archivo, `DashboardViewController.swift`, encabezados, `weak` en `dataStore`, enum `Medal`, márgenes del leaderboard, colores en el Asset Catalog (paleta Eco Cirujeo), textos en el String Catalog, `App/` huérfana borrada, nombre visible "Eco Cirujeo" e ícono de la app.
 - ⬜ **Orden para seguir:**
-  1. Worker a `async`/`await` (la última deuda de Juan, teoría nueva).
-  2. Alto del leaderboard según la cantidad de filas.
-  3. Tab bar con 4 pestañas (Inicio, Objetos, Eventos, Actividad) + cabecera con el wordmark "Eco Cirujeo" centrado arriba.
-  4. Pestaña Objetos: listado con nav bar (el Mapa entra después por *push*).
-  5. Tarjeta de objeto con foto, nombre y banda diagonal Malo/Bueno/Excelente.
-  6. Pase visual (sin apuro): splash con `logo-vertical.png`, fuentes de la marca.
+  1. ✅ Worker a `async`/`await` (20/11, [PR #1](https://github.com/ChristianSRgit/CirujeAR/pull/1)).
+  2. **(en curso, adelantado del paso 6)** Splash: `LaunchScreen.storyboard` en Interface Builder con `logo-vertical.png` sobre `FondoPapel`. Si Interface Builder anda demasiado lento en la VM, plan B: clave `UILaunchScreen` en `Info.plist`, con el logo achicado. Motivo: al arrancar la app se ve una pantalla blanca vacía, que es la pantalla de lanzamiento de la plantilla, no la carga de datos.
+  3. Alto del leaderboard según la cantidad de filas.
+  4. Tab bar con 4 pestañas (Inicio, Objetos, Eventos, Actividad) + cabecera con el wordmark "Eco Cirujeo" centrado arriba.
+  5. Pestaña Objetos: listado con nav bar (el Mapa entra después por *push*).
+  6. Tarjeta de objeto con foto, nombre y banda diagonal Malo/Bueno/Excelente.
+  7. Pase visual (sin apuro): fuentes de la marca.
+- 📝 **Anotado para más adelante (20/11):**
+  - Tocar una fila del leaderboard la deja seleccionada (fondo gris). No debería pasar: hoy la fila no lleva a ningún lado.
+  - Feature futura: tocar un usuario del leaderboard abre su **perfil**. La pantalla de perfil todavía no existe; en `docs/FEATURES.md` figura como "no entra esta semana".
 
 ## 🥈 Prioridad 2 — práctica UIKit en paralelo
 
