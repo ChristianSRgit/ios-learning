@@ -120,7 +120,7 @@ Puntaje y badges ya cerrados (2026-10-26): avistamiento = 1 punto, donación = 2
 - ✅ `Home/` en subcarpetas, un protocolo por archivo, `DashboardViewController.swift`, encabezados, `weak` en `dataStore`, enum `Medal`, márgenes del leaderboard, colores en el Asset Catalog (paleta Eco Cirujeo), textos en el String Catalog, `App/` huérfana borrada, nombre visible "Eco Cirujeo" e ícono de la app.
 - ⬜ **Orden para seguir:**
   1. ✅ Worker a `async`/`await` (20/11, [PR #1](https://github.com/ChristianSRgit/CirujeAR/pull/1)).
-  2. **(en curso, adelantado del paso 6)** Splash: `LaunchScreen.storyboard` en Interface Builder con `logo-vertical.png` sobre `FondoPapel`. Si Interface Builder anda demasiado lento en la VM, plan B: clave `UILaunchScreen` en `Info.plist`, con el logo achicado. Motivo: al arrancar la app se ve una pantalla blanca vacía, que es la pantalla de lanzamiento de la plantilla, no la carga de datos.
+  2. ✅ Splash (20/11, [PR #2](https://github.com/ChristianSRgit/CirujeAR/pull/2)): `LaunchScreen.storyboard` con `LogoVertical` centrado, ancho = 1,35 × pantalla, fondo `#F9F3E1` (el crema del PNG). Christian agregó el logo al Asset Catalog y el Image View en Interface Builder; las constraints las editó Claude en el XML porque Interface Builder iba demasiado lento en la VM. Pendiente menor: pasar el `#F9F3E1` a un color del Asset Catalog.
   3. Alto del leaderboard según la cantidad de filas.
   4. Tab bar con 4 pestañas (Inicio, Objetos, Eventos, Actividad) + cabecera con el wordmark "Eco Cirujeo" centrado arriba.
   5. Pestaña Objetos: listado con nav bar (el Mapa entra después por *push*).
